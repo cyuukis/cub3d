@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/03 22:08:34 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/08 21:09:48 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ typedef struct	s_win //структура для окна
 {
 	void		*mlx;
 	void		*win;
-	void		*img;
 	void		*addr;
 	int			line_l;
 	int			bpp;
@@ -44,7 +43,70 @@ typedef struct	s_all // структура для всего вместе
 	t_win		*win;
 	t_plr		*plr;
 	char		**map;
+	int			len;
 	int			width;
 	int			height;
+	int			w_width;
+	int			w_height;
+	char		*textur_no;
+	char		*textur_so;
+	char		*textur_we;
+	char		*textur_ea;
+	char		*textur_s;
 
 }				t_all;
+
+typedef struct	s_ingno {
+	void		*no_img;
+	char		*no_addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+	int			img_wno;
+	int			img_hno;
+	int			len_no;
+}				t_imgno;
+
+typedef struct	s_ingso {
+	void		*so_img;
+	char		*so_addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+	int			img_wso;
+	int			img_hso;
+	int			len_so;
+}				t_imgso;
+
+typedef struct	s_ingwe {
+	void		*we_img;
+	char		*we_addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+	int			img_wwe;
+	int			img_hwe;
+	int			len_we;
+}				t_imgwe;
+
+typedef struct	s_ingea {
+	void		*ea_img;
+	char		*ea_addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+	int			img_wea;
+	int			img_hea;
+	int			len_ea;
+}				t_imgea;
+
+typedef struct	s_ings {
+	void		*s_img;
+	char		*s_addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+	int			img_ws;
+	int			img_hs;
+	int			len_s;
+}				t_imgs;
