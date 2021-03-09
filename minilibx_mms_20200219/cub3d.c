@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/08 21:11:00 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/09 18:20:44 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	ft_parses(char *map)
 	t_imgwe mwe_img;
 	t_imgea mea_img;
 	t_imgs ms_img;
+	t_colors f_colors;
 
 	mlx_get_screen_size(m_mlx.mlx, &znach.w_width, &znach.w_height);
 	if (*map == 'R')
@@ -109,8 +110,63 @@ void	ft_parses(char *map)
 	}
 	else if (*map == 'F')
 	{
-		
+		map++;
+		f_colors.fbits_one = ft_atoi(map);
+		str = ft_strchr(map, ',');
+		map = str;
+		//printf("1@@@%s\n", map);
+		map++;
+		f_colors.fbits_two = ft_atoi(map);
+		str = ft_strchr(map, ',');
+		map = str;
+		//printf("1@@@%s\n", map);
+		map++;
+		f_colors.fbits_three = ft_atoi(map);
+		str = "";
+		str = ft_strchr(map, ',');
+		if (str != '\0')
+			return ;//ошибка
+		if (f_colors.fbits_one > 255 ||
+		f_colors.fbits_two > 255 || f_colors.fbits_three > 255)
+			return ;// ошибка
+		if (f_colors.fbits_one < 0 ||
+		f_colors.fbits_two < 0 || f_colors.fbits_three < 0)
+			return ;//ошибка
+		printf("7!!!!!!!!!!!!\n");
+		printf("%d\n", f_colors.fbits_one);
+		printf("%d\n", f_colors.fbits_two);
+		printf("%d\n", f_colors.fbits_three);
 	}
+	else if (*map == 'C')
+	{
+		map++;
+		f_colors.cbits_one = ft_atoi(map);
+		str = ft_strchr(map, ',');
+		map = str;
+		//printf("1@@@%s\n", map);
+		map++;
+		f_colors.cbits_two = ft_atoi(map);
+		str = ft_strchr(map, ',');
+		map = str;
+		//printf("1@@@%s\n", map);
+		map++;
+		f_colors.cbits_three = ft_atoi(map);
+		str = "";
+		str = ft_strchr(map, ',');
+		if (str != '\0')
+			return ;//ошибка
+		if (f_colors.cbits_one > 255 ||
+		f_colors.cbits_two > 255 || f_colors.cbits_three > 255)
+			return ;// ошибка
+		if (f_colors.cbits_one < 0 ||
+		f_colors.cbits_two < 0 || f_colors.cbits_three < 0)
+			return ;//ошибка
+		printf("8!!!!!!!!!!!!\n");
+		printf("%d\n", f_colors.cbits_one);
+		printf("%d\n", f_colors.cbits_two);
+		printf("%d\n", f_colors.cbits_three);
+	}
+
 }
 
 char	**make_map(t_list **head, int size)
@@ -126,7 +182,7 @@ char	**make_map(t_list **head, int size)
 		tmp = tmp->next;
 	}
 	i = -1;
-	 while (map[++i])
+	while (map[++i])
 	{
 		ft_parses(map[i]);
 		ft_putendl_fd(map[i]);

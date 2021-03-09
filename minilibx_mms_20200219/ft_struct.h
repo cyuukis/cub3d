@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/08 21:09:48 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/09 18:47:34 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,3 +110,12 @@ typedef struct	s_ings {
 	int			img_hs;
 	int			len_s;
 }				t_imgs;
+
+typedef struct	s_colors {
+	int			fbits_one;
+	int			fbits_two;
+	int			fbits_three;
+	int			cbits_one;
+	int			cbits_two;
+	int			cbits_three;
+}				t_colors;
