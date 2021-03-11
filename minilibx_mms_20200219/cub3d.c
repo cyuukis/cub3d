@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/09 18:20:44 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/11 19:55:10 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,33 @@
 #include "../libft11/libft.h"
 #include <stdio.h>
 
-void	ft_parses(char *map)
+void ft_colorf(t_colors *f_colors)
+{
+	t_colors f_c;
+	int r;
+	int g;
+	int b;
+
+	r = f_colors->fbits_one << 16;
+	g = f_colors->fbits_two << 8;
+	b = f_colors->fbits_three << 0;
+	f_c.fbits_color = r | g | b;
+}
+void ft_colorc(t_colors *f_colors)
+{
+	t_colors c_c;
+	int r;
+	int g;
+	int b;
+
+	r = f_colors->cbits_one << 16;
+	g = f_colors->cbits_two << 8;
+	b = f_colors->cbits_three << 0;
+	c_c.cbits_color = r | g | b;
+	//printf("%x", c_c.cbits_color);
+}
+
+void	ft_parses(char *map, t_all *len)
 {
 	t_win	m_mlx;
 	t_all	znach;
@@ -32,8 +58,10 @@ void	ft_parses(char *map)
 	t_colors f_colors;
 
 	mlx_get_screen_size(m_mlx.mlx, &znach.w_width, &znach.w_height);
-	if (*map == 'R')
+	if (*map == 'R' && len->len_r == -1)
 	{
+		len->len_r = 1;
+		len->sum = len->len_r;
 		map++;
 		znach.width = ft_atoi(map);
 		str = ft_itoa(znach.width);
@@ -50,11 +78,13 @@ void	ft_parses(char *map)
 		: znach.width);
 		((znach.w_height < znach.height) ? znach.height = znach.w_height
 		: znach.height);
-		printf("1!!!!!!!!!!!!\n");
+		//printf("1!!!!!!!!!!!!\n");
 	}
 	//printf("%d____%d", znach.W_width, znach.W_height);
-	else if (*map == 'N' && *(map + 1) == 'O')
+	else if ((*map == 'N' && *(map + 1) == 'O') && len->len_no == -1)
 	{
+		len->len_no = 1;
+		len->sum = len->sum + len->len_no;
 		map = map + 2;
 		znach.textur_no = *ft_split(map, ' ');
 		if (!(m_img.no_img = mlx_xpm_file_to_image(m_mlx.mlx,
@@ -62,10 +92,12 @@ void	ft_parses(char *map)
 			return ;//ошибка какая-то
 		m_img.no_addr = mlx_get_data_addr(m_img.no_img,
 		&m_img.bits_per_pixel, &m_img.line_length, &m_img.endian);
-		printf("2!!!!!!!!!!!!\n");
+		//printf("2!!!!!!!!!!!!\n");
 	}
-	else if (*map == 'S' && *(map + 1) == 'O')
+	else if ((*map == 'S' && *(map + 1) == 'O') && len->len_so == -1)
 	{
+		len->len_so = 1;
+		len->sum = len->sum + len->len_so;
 		map = map + 2;
 		znach.textur_so = *ft_split(map, ' ');
 		if (!(mso_img.so_img = mlx_xpm_file_to_image(m_mlx.mlx,
@@ -73,10 +105,14 @@ void	ft_parses(char *map)
 			return ;//ошибка какая-то
 		mso_img.so_addr = mlx_get_data_addr(mso_img.so_img,
 		&mso_img.bits_per_pixel, &mso_img.line_length, &mso_img.endian);
-		printf("3!!!!!!!!!!!!\n");
+		//printf("3!!!!!!!!!!!!\n");
 	}
 	else if (*map == 'W' && *(map + 1) == 'E')
 	{
+		if (len->len_we != -1)
+			return ; // ошибка
+		len->len_we = 1;
+		len->sum = len->sum + len->len_we;
 		map = map + 2;
 		znach.textur_we = *ft_split(map, ' ');
 		if (!(mwe_img.we_img = mlx_xpm_file_to_image(m_mlx.mlx,
@@ -84,10 +120,14 @@ void	ft_parses(char *map)
 			return ;//ошибка какая-то
 		mwe_img.we_addr = mlx_get_data_addr(mwe_img.we_img,
 		&mwe_img.bits_per_pixel, &mwe_img.line_length, &mwe_img.endian);
-		printf("4!!!!!!!!!!!!\n");
+		//printf("4!!!!!!!!!!!!\n");
 	}
 	else if (*map == 'E' && *(map + 1) == 'A')
 	{
+		if (len->len_ea != -1)
+			return ;// ошибка
+		len->len_ea = 1;
+		len->sum = len->sum + len->len_ea;
 		map = map + 2;
 		znach.textur_ea = *ft_split(map, ' ');
 		if (!(mea_img.ea_img = mlx_xpm_file_to_image(m_mlx.mlx,
@@ -95,10 +135,14 @@ void	ft_parses(char *map)
 			return ;//ошибка какая-то
 		mea_img.ea_addr = mlx_get_data_addr(mea_img.ea_img,
 		&mea_img.bits_per_pixel, &mea_img.line_length, &mea_img.endian);
-		printf("5!!!!!!!!!!!!\n");
+		//printf("5!!!!!!!!!!!!\n");
 	}
 	else if (*map == 'S')
 	{
+		if (len->len_s != -1)
+			return ; // ошибка
+		len->len_s = 1;
+		len->sum = len->sum + len->len_s;
 		map++;
 		znach.textur_s = *ft_split(map, ' ');
 		if (!(ms_img.s_img = mlx_xpm_file_to_image(m_mlx.mlx,
@@ -106,10 +150,14 @@ void	ft_parses(char *map)
 			return ;//ошибка какая-то
 		ms_img.s_addr = mlx_get_data_addr(ms_img.s_img,
 		&ms_img.bits_per_pixel, &ms_img.line_length, &ms_img.endian);
-		printf("6!!!!!!!!!!!!\n");
+		//printf("6!!!!!!!!!!!!\n");
 	}
 	else if (*map == 'F')
 	{
+		if (len->len_f != -1)
+			return ; //ошибка
+		len->len_f = 1;
+		len->sum = len->sum + len->len_f;
 		map++;
 		f_colors.fbits_one = ft_atoi(map);
 		str = ft_strchr(map, ',');
@@ -132,13 +180,18 @@ void	ft_parses(char *map)
 		if (f_colors.fbits_one < 0 ||
 		f_colors.fbits_two < 0 || f_colors.fbits_three < 0)
 			return ;//ошибка
-		printf("7!!!!!!!!!!!!\n");
-		printf("%d\n", f_colors.fbits_one);
-		printf("%d\n", f_colors.fbits_two);
-		printf("%d\n", f_colors.fbits_three);
-	}
+		ft_colorf(&f_colors);
+	// 	printf("7!!!!!!!!!!!!\n");
+	// 	printf("%d\n", f_colors.fbits_one);
+	// 	printf("%d\n", f_colors.fbits_two);
+	// 	printf("%d\n", f_colors.fbits_three);
+	 }
 	else if (*map == 'C')
 	{
+		if (len->len_c != -1)
+			return ;//ошибка
+		len->len_c = 1;
+		len->sum = len->sum + len->len_f;
 		map++;
 		f_colors.cbits_one = ft_atoi(map);
 		str = ft_strchr(map, ',');
@@ -161,15 +214,15 @@ void	ft_parses(char *map)
 		if (f_colors.cbits_one < 0 ||
 		f_colors.cbits_two < 0 || f_colors.cbits_three < 0)
 			return ;//ошибка
-		printf("8!!!!!!!!!!!!\n");
-		printf("%d\n", f_colors.cbits_one);
-		printf("%d\n", f_colors.cbits_two);
-		printf("%d\n", f_colors.cbits_three);
+		ft_colorc(&f_colors);
 	}
-
+	else if (len->sum == 8)
+	{
+		
+	}
 }
 
-char	**make_map(t_list **head, int size)
+char	**make_map(t_list **head, int size, t_all *len)
 {
 	char	**map = ft_calloc(size + 1, sizeof(char *));
 	int		i = -1;
@@ -184,7 +237,7 @@ char	**make_map(t_list **head, int size)
 	i = -1;
 	while (map[++i])
 	{
-		ft_parses(map[i]);
+		ft_parses(map[i], len);
 		ft_putendl_fd(map[i]);
 	}
 	return (map);
@@ -202,6 +255,16 @@ char	**make_map(t_list **head, int size)
 int		main(int argc, char **argv)
 {
 	t_win m_mlx;
+	t_all len;
+
+	len.len_r = -1;
+	len.len_we = -1;
+	len.len_no = -1;
+	len.len_ea = -1;
+	len.len_s = -1;
+	len.len_so = -1;
+	len.len_c = -1;
+	len.len_f = -1;
 	int		fd = open(argv[1], O_RDONLY);
 	char	*line = NULL;
 	t_list	*head = NULL;
@@ -210,6 +273,6 @@ int		main(int argc, char **argv)
 	while (get_next_line(fd, &line))
 		ft_lstadd_back(&head, ft_lstnew(line));
 	ft_lstadd_back(&head, ft_lstnew(line));
-	make_map(&head, ft_lstsize(head));
+	make_map(&head, ft_lstsize(head), &len);
 	//make_player();
 }

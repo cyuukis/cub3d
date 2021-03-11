@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/09 18:47:34 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/11 19:47:17 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,15 @@ typedef struct	s_all // структура для всего вместе
 	t_win		*win;
 	t_plr		*plr;
 	char		**map;
-	int			len;
+	int			len_r;
+	int			len_no;
+	int			len_so;
+	int			len_we;
+	int			len_ea;
+	int			len_c;
+	int			len_f;
+	int			len_s;
+	int			sum;
 	int			width;
 	int			height;
 	int			w_width;
@@ -115,7 +123,9 @@ typedef struct	s_colors {
 	int			fbits_one;
 	int			fbits_two;
 	int			fbits_three;
+	int			fbits_color;
 	int			cbits_one;
 	int			cbits_two;
 	int			cbits_three;
+	int			cbits_color;
 }				t_colors;
