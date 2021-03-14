@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/11 19:47:17 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/14 15:56:28 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct	s_all // структура для всего вместе
 {
 	t_win		*win;
 	t_plr		*plr;
+	int			fd;
 	char		**map;
 	int			len_r;
 	int			len_no;
