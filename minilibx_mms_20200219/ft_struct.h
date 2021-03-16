@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/15 23:01:37 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/16 21:25:43 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ typedef struct	s_point // структура для точки
 
 typedef struct	s_map
 {
-
+	float	x;
+	float	y;
+	int		col;
 }				t_map;
 
 typedef struct	s_plr //структура для игрока и луча
@@ -41,7 +43,9 @@ typedef struct	s_plr //структура для игрока и луча
 	float		diry;
 	float		start;
 	float		end;
-}				  t_plr;
+	int			flag;
+	int		place_two;
+}				t_plr;
 
 typedef struct	s_all // структура для всего вместе
 {

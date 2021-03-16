@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/15 23:02:37 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/16 21:53:11 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,35 +46,84 @@ void ft_colorc(t_colors *f_colors)
 	c_c.cbits_color = r | g | b;
 	//printf("%x", c_c.cbits_color);
 }
-void	ft_parses_map(int i, int j, t_plr *dote)
+
+void	ft_parses_map2(int i, int j, t_plr *dote)
 {
-	dote->x = j + 0.5;
-	dote->y = i + 0.5;
+	t_map obj[dote->place_two];
+	obj[dote->place_two].x = j + 0.5;
+	obj[dote->place_two].y = i + 0.5;
+}
+
+void	ft_parses_map(int i, int j, t_plr *dote, char sym)
+{
+	//t_plr app;
+	if ((sym == 'W'  || sym == 'N' || sym == 'E' || sym == 'S'))
+	{
+		dote->x = j + 0.5;
+		dote->y = i + 0.5;
+		dote->flag = dote->flag + 1;
+	}
+	if (dote->flag == 1)
+	{
+		printf("error");
+		return ;
+	}
+	if (sym == '2')
+	{
+		dote->place_two++;
+	}
+	//printf("%d", app.place_two);
 	//printf("%c\n", *map[0]);
 }
 
-char	**make_map(t_list **head, int size, t_all *len)
+char	*ft_spacex(char *line, int max)
 {
-	char	**map = ft_calloc(size + 1, sizeof(char *));
-	int		i = -1;
-	int		j = -1;
-	int		x;
+	int		size;
+	char	*str;
+	int i;
+
+	i = 0;
+	str = NULL;
+	size = ft_strlen(line);
+	str = (char *)malloc(1 + max);
+	ft_memcpy(str, line, size);
+	while (size < max)
+	{
+		str[size] = ' ';
+		size++;
+	}
+	str[max] = '\0';
+	return (str);
+}
+
+char	**make_map(t_list **head, int size, t_all *len, int max)
+{
+	char	**map;
+	int		i;
+	int		j;
+	int		y;
 	char	sym;
-	t_plr dot;
+	char	*line;
+	t_plr	dot;
+	t_list	*tmp;
+	t_all	*num;
 
-	t_list	*tmp = *head;
-	t_all *num;
-
+	map = ft_calloc(size + 1, sizeof(char *));
+	i = -1;
+	j = -1;
+	tmp = *head;
+	dot.flag = -1;
+	dot.place_two = 0;
 	while (tmp)
 	{
-		map[++i] = tmp->content;
+		line = tmp->content;
+		line = ft_spacex(line, max);
+		map[++i] = line;
 		tmp = tmp->next;
-		x = i;
+		y = i;
 	}
 	i = -1;
-	//printf("%s", OBJ);
-
-	while (++i < x)
+	while (++i < y)
 	{
 		while (++j < ft_strlen(map[i]))
 		{
@@ -82,55 +131,36 @@ char	**make_map(t_list **head, int size, t_all *len)
 			if (!(ft_strrchr(OBJ, sym)))
 			{
 				printf("error");//ошибка
+				//printf("|%c|", sym);
 				break ;
 			}
 			if (ft_strrchr(OBJJ, sym))
 			{
-				//printf("%c", sym);
-				(((map[i - 1][j] != ' ') && (map[i + 1][j] != ' ') && (map[i][j + 1] != ' ') && (map[i][j - 1] != ' '))
-				? ft_parses_map(i, j, &dot) : printf("error"));
+				//printf("|%c|", sym);
+				(((map[i - 1][j] != ' ') && (map[i + 1][j] != ' ')
+				&& (map[i][j + 1] != ' ') && (map[i][j - 1] != ' '))
+				? ft_parses_map(i, j, &dot, map[i][j]) : printf("error"));
 				//printf("%f, %f", dot.x, dot.y);
 			}
-			// if (map[i][j] == 'E')
-			// {
-			// 	((map[i - 1][j] != ' ' && map[i + 1][j] != ' '
-			// 	&& map[i][j + 1] != ' ' && map[i][j - 1] != ' ')
-			// 	? ft_parses_map(i, j, &dot) : printf("error"));
-			// 	//printf("%f, %f", dot.x, dot.y);
-			// }
-			// if (map[i][j] == 'S')
-			// {
-			// 	((map[i - 1][j] != ' ' && map[i + 1][j] != ' '
-			// 	&& map[i][j + 1] != ' ' && map[i][j - 1] != ' ')
-			// 	? ft_parses_map(i, j, &dot) : printf("error"));
-			// 	//printf("%f, %f", dot.x, dot.y);
-			// }
-			// if (map[i][j] == 'N')
-			// {
-			// 	((map[i - 1][j] != ' ' && map[i + 1][j] != ' '
-			// 	&& map[i][j + 1] != ' ' && map[i][j - 1] != ' ')
-			// 	? ft_parses_map(i, j, &dot) : printf("error"));
-			// 	//printf("%f, %f", dot.x, dot.y);
-			// }
-			// if (map[i][j] == '0')
-			// {
-			// 	((map[i - 1][j] != ' ' && map[i + 1][j] != ' '
-			// 	&& map[i][j + 1] != ' ' && map[i][j - 1] != ' ')
-			// 	? ft_parses_map(i, j, &dot) : printf("error"));
-			// 	//printf("%f, %f", dot.x, dot.y);
-			// }
-			// if (map[i][j] == '2')
-			// {
-			// 	((map[i - 1][j] != ' ' && map[i + 1][j] != ' '
-			// 	&& map[i][j + 1] != ' ' && map[i][j - 1] != ' ')
-			// 	? ft_parses_map(i, j, &dot) : printf("error"));
-			// 	//printf("%f, %f", dot.x, dot.y);
-			// }
-			//printf("%c", map[i][j]);
 		}
 		//printf("\n");
 		j = -1;
 			//ft_putendl_fd(map[i]);
+	}
+	i = -1;
+	j = -1;
+	while (++i < y)
+	{
+
+		while (++j < ft_strlen(map[i]))
+		{
+			sym = map[i][j];
+			if (ft_strrchr("2", sym))
+			{
+				ft_parses_map2(i, j, &dot);
+			}
+		}
+		j = -1;
 	}
 	return (map);
 }
@@ -314,14 +344,6 @@ void	ft_parses(char *map, t_all *len)
 	{
 		str = NULL;
 		len->flag = 1;
-		// while (get_next_line(len->fd, &str))
-		// {
-		// 	//printf("%s\n", len->fd);
-		// 	ft_lstadd_back(&head, ft_lstnew(str));
-		// }
-		// ft_lstadd_back(&head, ft_lstnew(str));
-		// make_map(&head, ft_lstsize(head), len);
-		// //return ;
 	}
 }
 
@@ -336,11 +358,15 @@ void	ft_parses(char *map, t_all *len)
 // 	plr.diry = 0;
 // }
 
+
+
 int		main(int argc, char **argv)
 {
 	t_win m_mlx;
 	t_all len;
+	int max;
 
+	max = 0;
 	len.flag = 0;
 	len.len_r = -1;
 	len.len_we = -1;
@@ -361,11 +387,15 @@ int		main(int argc, char **argv)
 		if (len.flag == 1)
 			break ;
 	}
+	if (ft_strlen(len.str_first) > max)
+		max = ft_strlen(len.str_first);
 	ft_lstadd_front(&head, ft_lstnew(len.str_first));
 	while (get_next_line(len.fd, &line))
 	{
+		if (ft_strlen(line) > max)
+			max = ft_strlen(line);
 		ft_lstadd_back(&head, ft_lstnew(line));
 	}
-		make_map(&head, ft_lstsize(head), &len);
+	make_map(&head, ft_lstsize(head), &len, max);
 	//make_player();
 }
