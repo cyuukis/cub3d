@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/16 21:53:11 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/17 22:44:05 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@
 #include "ft_struct.h"
 #include "../libft11/libft.h"
 #include <stdio.h>
+#include <math.h>
 #define OBJ " 102WESN"
 #define OBJJ "02WESN"
 
-void ft_colorf(t_colors *f_colors)
+void	ft_colorf(t_colors *f_colors)
 {
 	t_colors f_c;
 	int r;
@@ -33,7 +34,7 @@ void ft_colorf(t_colors *f_colors)
 	b = f_colors->fbits_three << 0;
 	f_c.fbits_color = r | g | b;
 }
-void ft_colorc(t_colors *f_colors)
+void	ft_colorc(t_colors *f_colors)
 {
 	t_colors c_c;
 	int r;
@@ -45,6 +46,32 @@ void ft_colorc(t_colors *f_colors)
 	b = f_colors->cbits_three << 0;
 	c_c.cbits_color = r | g | b;
 	//printf("%x", c_c.cbits_color);
+}
+
+void	direction_player(char sym, t_plr *dote)
+{
+	if (sym == 'N')
+	{
+		dote->direction = 3 * M_PI_2 / 2;
+	}
+	if (sym == 'S')
+	{
+		dote->direction = M_PI_2 / 2;
+	}
+	if (sym == 'W')
+	{
+		dote->direction = M_PI;
+	}
+	if (sym == 'E')
+	{
+		dote->direction = 0;
+	}
+}
+
+void exit_error()
+{
+	write(1, "Error\n",6);
+	write(1,"Error in the parser\n", 20);
 }
 
 void	ft_parses_map2(int i, int j, t_plr *dote)
@@ -59,6 +86,7 @@ void	ft_parses_map(int i, int j, t_plr *dote, char sym)
 	//t_plr app;
 	if ((sym == 'W'  || sym == 'N' || sym == 'E' || sym == 'S'))
 	{
+		direction_player(sym, dote);
 		dote->x = j + 0.5;
 		dote->y = i + 0.5;
 		dote->flag = dote->flag + 1;
@@ -98,17 +126,17 @@ char	*ft_spacex(char *line, int max)
 
 char	**make_map(t_list **head, int size, t_all *len, int max)
 {
-	char	**map;
+	//char	**map;
 	int		i;
 	int		j;
-	int		y;
 	char	sym;
 	char	*line;
 	t_plr	dot;
 	t_list	*tmp;
-	t_all	*num;
+	// t_all	*num;
+	// t_all	map;
 
-	map = ft_calloc(size + 1, sizeof(char *));
+	len->map = ft_calloc(size + 1, sizeof(char *));
 	i = -1;
 	j = -1;
 	tmp = *head;
@@ -118,16 +146,16 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 	{
 		line = tmp->content;
 		line = ft_spacex(line, max);
-		map[++i] = line;
+		len->map[++i] = line;
 		tmp = tmp->next;
-		y = i;
+		len->y = i;
 	}
 	i = -1;
-	while (++i < y)
+	while (++i < len->y)
 	{
-		while (++j < ft_strlen(map[i]))
+		while (++j < ft_strlen(len->map[i]))
 		{
-			sym = map[i][j];
+			sym = len->map[i][j];
 			if (!(ft_strrchr(OBJ, sym)))
 			{
 				printf("error");//ошибка
@@ -137,24 +165,25 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 			if (ft_strrchr(OBJJ, sym))
 			{
 				//printf("|%c|", sym);
-				(((map[i - 1][j] != ' ') && (map[i + 1][j] != ' ')
-				&& (map[i][j + 1] != ' ') && (map[i][j - 1] != ' '))
-				? ft_parses_map(i, j, &dot, map[i][j]) : printf("error"));
+				(((len->map[i - 1][j] != ' ') && (len->map[i + 1][j] != ' ')
+				&& (len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' '))
+				? ft_parses_map(i, j, &dot, len->map[i][j]) : printf("error"));
 				//printf("%f, %f", dot.x, dot.y);
 			}
+
 		}
+		//printf("|%s|\n", len->map[i]);
 		//printf("\n");
 		j = -1;
 			//ft_putendl_fd(map[i]);
 	}
 	i = -1;
 	j = -1;
-	while (++i < y)
+	while (++i < len->y)
 	{
-
-		while (++j < ft_strlen(map[i]))
+		while (++j < ft_strlen(len->map[i]))
 		{
-			sym = map[i][j];
+			sym = len->map[i][j];
 			if (ft_strrchr("2", sym))
 			{
 				ft_parses_map2(i, j, &dot);
@@ -162,7 +191,7 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 		}
 		j = -1;
 	}
-	return (map);
+	return (len->map);
 }
 
 void	ft_parses(char *map, t_all *len)
@@ -338,13 +367,30 @@ void	ft_parses(char *map, t_all *len)
 		f_colors.cbits_two < 0 || f_colors.cbits_three < 0)
 			return ;//ошибка
 		ft_colorc(&f_colors);
-
 	}
-	else if (len->sum == 8 && *map == '1')
+
+	else if (len->sum == 8 /*&& (*map == '1' || *map == ' ')*/)
 	{
 		str = NULL;
-		len->flag = 1;
+		if (*map == ' ')
+		{
+			while (*map != '\0')
+			{
+				if (*map == '1')
+				{
+					len->flag = 1;
+					break ;
+				}
+				map++;
+			}
+		}
 	}
+
+	//printf("%d\n", len->flag);
+	// else if (len->sum > 8)
+	// {
+	// 	exit(1);
+	// }
 }
 
 
@@ -359,11 +405,51 @@ void	ft_parses(char *map, t_all *len)
 // }
 
 
+void	my_mlx_pixel_put(t_win *data, int x, int y, int color)
+{
+	char	*dst;
+
+	dst = data->addr + (y * data->line_l + x * (data->bpp / 8));
+	*(unsigned int*)dst = color;
+}
+
+void draw_map(t_all *map, t_list *head)
+{
+
+	t_win m_mlx;
+	int j;
+	int x;
+
+	j = -1;
+	x = -1;
+	m_mlx.mlx = mlx_init();
+	m_mlx.win = mlx_new_window(m_mlx.mlx, 1920, 1080, "cub3D");
+	m_mlx.img = mlx_new_image(m_mlx.mlx, 1920, 1080);
+	m_mlx.addr = mlx_get_data_addr(m_mlx.img, &m_mlx.bpp, &m_mlx.line_l, &m_mlx.en);
+	// printf("%d\n",map->y);
+	// printf("%s\n",map->map[3]);
+	while (++x < map->y)
+	{
+		while (++j < ft_strlen(map->map[x]))
+		{
+			if (map->map[x][j] == '1')
+			{
+				my_mlx_pixel_put(&m_mlx, 100, 100, 0x00FF0000);
+				mlx_put_image_to_window(m_mlx.mlx, m_mlx.win, m_mlx.img, 0, 0);
+				mlx_loop(m_mlx.mlx);
+			}
+			//printf("%c", map->map[x][j]);
+		}
+		printf("\n");
+		j = -1;
+	}
+
+}
 
 int		main(int argc, char **argv)
 {
-	t_win m_mlx;
-	t_all len;
+	//t_win	m_mlx;
+	t_all	len;
 	int max;
 
 	max = 0;
@@ -379,7 +465,7 @@ int		main(int argc, char **argv)
 	len.fd = open(argv[1], O_RDONLY);
 	char	*line = NULL;
 	t_list	*head = NULL;
-	//m_mlx.mlx = mlx_init();
+
 	while (get_next_line(len.fd, &line))
 	{
 		len.str_first = line;
@@ -387,6 +473,8 @@ int		main(int argc, char **argv)
 		if (len.flag == 1)
 			break ;
 	}
+	if (len.flag == 0)
+		printf("error");
 	if (ft_strlen(len.str_first) > max)
 		max = ft_strlen(len.str_first);
 	ft_lstadd_front(&head, ft_lstnew(len.str_first));
@@ -397,5 +485,7 @@ int		main(int argc, char **argv)
 		ft_lstadd_back(&head, ft_lstnew(line));
 	}
 	make_map(&head, ft_lstsize(head), &len, max);
+	draw_map(&len, head);
+	//printf("%f", dot->direction);
 	//make_player();
 }

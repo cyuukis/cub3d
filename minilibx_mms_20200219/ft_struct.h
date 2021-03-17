@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/16 21:25:43 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/17 22:22:13 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ typedef struct	s_win //структура для окна
 	void		*mlx;
 	void		*win;
 	void		*addr;
+	void		*img;
 	int			line_l;
 	int			bpp;
 	int			en;
@@ -32,11 +33,11 @@ typedef struct	s_map
 {
 	float	x;
 	float	y;
-	int		col;
 }				t_map;
 
 typedef struct	s_plr //структура для игрока и луча
 {
+	float		direction;
 	float		x;
 	float		y;
 	float		dirx;
@@ -44,7 +45,7 @@ typedef struct	s_plr //структура для игрока и луча
 	float		start;
 	float		end;
 	int			flag;
-	int		place_two;
+	int			place_two;
 }				t_plr;
 
 typedef struct	s_all // структура для всего вместе
@@ -73,6 +74,7 @@ typedef struct	s_all // структура для всего вместе
 	char		*textur_we;
 	char		*textur_ea;
 	char		*textur_s;
+	int			y;
 
 }				t_all;
 
