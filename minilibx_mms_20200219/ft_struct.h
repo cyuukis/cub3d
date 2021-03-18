@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/17 22:22:13 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/18 21:29:47 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,9 @@ typedef struct	s_plr //структура для игрока и луча
 
 typedef struct	s_all // структура для всего вместе
 {
-	t_win		*win;
-	t_plr		*plr;
+	t_win		win;
+	t_plr		plr;
+	t_map		*obj;
 	int			fd;
 	int			flag;
 	char		**map;
@@ -75,7 +76,6 @@ typedef struct	s_all // структура для всего вместе
 	char		*textur_ea;
 	char		*textur_s;
 	int			y;
-
 }				t_all;
 
 typedef struct	s_ingno {

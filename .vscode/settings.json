@@ -1,5 +1,6 @@
 {
 	"files.associations": {
-		"ft_struct.h": "c"
+		"ft_struct.h": "c",
+		"__locale": "c"
 	}
 }

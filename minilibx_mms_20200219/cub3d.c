@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/17 22:44:05 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/18 21:41:22 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,30 +48,30 @@ void	ft_colorc(t_colors *f_colors)
 	//printf("%x", c_c.cbits_color);
 }
 
-void	direction_player(char sym, t_plr *dote)
+void	direction_player(char sym, t_all *dote)
 {
 	if (sym == 'N')
 	{
-		dote->direction = 3 * M_PI_2 / 2;
+		dote->plr.direction = 3 * M_PI_2 / 2;
 	}
 	if (sym == 'S')
 	{
-		dote->direction = M_PI_2 / 2;
+		dote->plr.direction = M_PI_2 / 2;
 	}
 	if (sym == 'W')
 	{
-		dote->direction = M_PI;
+		dote->plr.direction = M_PI;
 	}
 	if (sym == 'E')
 	{
-		dote->direction = 0;
+		dote->plr.direction = 0;
 	}
 }
 
 void exit_error()
 {
-	write(1, "Error\n",6);
-	write(1,"Error in the parser\n", 20);
+	write(2, "Error\n",6);
+	write(2,"Error in the parser\n", 20);
 }
 
 void	ft_parses_map2(int i, int j, t_plr *dote)
@@ -81,25 +81,26 @@ void	ft_parses_map2(int i, int j, t_plr *dote)
 	obj[dote->place_two].y = i + 0.5;
 }
 
-void	ft_parses_map(int i, int j, t_plr *dote, char sym)
+void	ft_parses_map(int i, int j, char sym, t_all *len)
 {
-	//t_plr app;
+
 	if ((sym == 'W'  || sym == 'N' || sym == 'E' || sym == 'S'))
 	{
-		direction_player(sym, dote);
-		dote->x = j + 0.5;
-		dote->y = i + 0.5;
-		dote->flag = dote->flag + 1;
+		direction_player(sym, len);
+		len->plr.x = j + 0.5;
+		len->plr.y = i + 0.5;
+		len->plr.flag = len->plr.flag + 1;
 	}
-	if (dote->flag == 1)
+	if (len->plr.flag == 1)
 	{
 		printf("error");
 		return ;
 	}
 	if (sym == '2')
 	{
-		dote->place_two++;
+		len->plr.place_two++;
 	}
+	//printf("%f", len->plr->y);
 	//printf("%d", app.place_two);
 	//printf("%c\n", *map[0]);
 }
@@ -131,17 +132,15 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 	int		j;
 	char	sym;
 	char	*line;
-	t_plr	dot;
+	//t_plr	plr;
 	t_list	*tmp;
-	// t_all	*num;
-	// t_all	map;
 
 	len->map = ft_calloc(size + 1, sizeof(char *));
 	i = -1;
 	j = -1;
 	tmp = *head;
-	dot.flag = -1;
-	dot.place_two = 0;
+	len->plr.flag = -1;
+	len->plr.place_two = 0;
 	while (tmp)
 	{
 		line = tmp->content;
@@ -167,7 +166,7 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 				//printf("|%c|", sym);
 				(((len->map[i - 1][j] != ' ') && (len->map[i + 1][j] != ' ')
 				&& (len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' '))
-				? ft_parses_map(i, j, &dot, len->map[i][j]) : printf("error"));
+				? ft_parses_map(i, j, len->map[i][j], len) : printf("error"));
 				//printf("%f, %f", dot.x, dot.y);
 			}
 
@@ -186,11 +185,12 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 			sym = len->map[i][j];
 			if (ft_strrchr("2", sym))
 			{
-				ft_parses_map2(i, j, &dot);
+				//ft_parses_map2(i, j, &plr);
 			}
 		}
 		j = -1;
 	}
+	//printf("%f", len->plr.y);
 	return (len->map);
 }
 
@@ -384,6 +384,10 @@ void	ft_parses(char *map, t_all *len)
 				map++;
 			}
 		}
+		if (*map == '1')
+		{
+			len->flag = 1;
+		}
 	}
 
 	//printf("%d\n", len->flag);
@@ -404,14 +408,31 @@ void	ft_parses(char *map, t_all *len)
 // 	plr.diry = 0;
 // }
 
-
 void	my_mlx_pixel_put(t_win *data, int x, int y, int color)
 {
 	char	*dst;
-
 	dst = data->addr + (y * data->line_l + x * (data->bpp / 8));
 	*(unsigned int*)dst = color;
 }
+
+int		key(int keycode, t_all *all)
+{
+	printf("%f\n", all->plr.y);
+	int j = 2;
+	int x = 5;
+	//all->y;
+	//mlx_destroy_window(m_mlx->mlx, m_mlx->win);
+
+	if (keycode == 13)
+	{
+		all->plr.y = all->plr.y - 0.1;
+	}
+	my_mlx_pixel_put(all->win.mlx, j, all->plr.y, 0x000FF00);
+	//printf("%s", all->map[2]);
+	return (0);
+}
+
+
 
 void draw_map(t_all *map, t_list *head)
 {
@@ -425,24 +446,32 @@ void draw_map(t_all *map, t_list *head)
 	m_mlx.mlx = mlx_init();
 	m_mlx.win = mlx_new_window(m_mlx.mlx, 1920, 1080, "cub3D");
 	m_mlx.img = mlx_new_image(m_mlx.mlx, 1920, 1080);
-	m_mlx.addr = mlx_get_data_addr(m_mlx.img, &m_mlx.bpp, &m_mlx.line_l, &m_mlx.en);
-	// printf("%d\n",map->y);
-	// printf("%s\n",map->map[3]);
-	while (++x < map->y)
+	m_mlx.addr = mlx_get_data_addr(m_mlx.img,
+	&m_mlx.bpp, &m_mlx.line_l, &m_mlx.en);
+
+	while (++x < (map->y + 1) * 16)
 	{
-		while (++j < ft_strlen(map->map[x]))
+
+		while (++j < ft_strlen(map->map[x / 16]) * 16)
 		{
-			if (map->map[x][j] == '1')
+			if (map->map[x / 16][j / 16] == '1')
 			{
-				my_mlx_pixel_put(&m_mlx, 100, 100, 0x00FF0000);
-				mlx_put_image_to_window(m_mlx.mlx, m_mlx.win, m_mlx.img, 0, 0);
-				mlx_loop(m_mlx.mlx);
+				my_mlx_pixel_put(&m_mlx, j, x, 0x00FF0000);
 			}
-			//printf("%c", map->map[x][j]);
+			if (map->map[x / 16][j / 16] == 'N')
+			{
+				my_mlx_pixel_put(&m_mlx, j, x, 0x000FF00);
+				mlx_hook(m_mlx.win, 2, 1L << 0, key, map);
+			}
 		}
-		printf("\n");
+		//printf("%s", map->map[x/16]);
+		//printf("\n");
 		j = -1;
 	}
+	//printf("@%s", map->map[x/16]);
+	//printf("\n");
+	mlx_put_image_to_window(m_mlx.mlx, m_mlx.win, m_mlx.img, 0, 0);
+	mlx_loop(m_mlx.mlx);
 
 }
 
@@ -450,6 +479,7 @@ int		main(int argc, char **argv)
 {
 	//t_win	m_mlx;
 	t_all	len;
+	t_plr plr;
 	int max;
 
 	max = 0;
@@ -485,7 +515,8 @@ int		main(int argc, char **argv)
 		ft_lstadd_back(&head, ft_lstnew(line));
 	}
 	make_map(&head, ft_lstsize(head), &len, max);
+	//printf("%f", len.plr.y);
 	draw_map(&len, head);
-	//printf("%f", dot->direction);
+
 	//make_player();
 }
