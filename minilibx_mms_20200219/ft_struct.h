@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/18 21:29:47 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/22 21:18:49 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,36 +47,6 @@ typedef struct	s_plr //структура для игрока и луча
 	int			flag;
 	int			place_two;
 }				t_plr;
-
-typedef struct	s_all // структура для всего вместе
-{
-	t_win		win;
-	t_plr		plr;
-	t_map		*obj;
-	int			fd;
-	int			flag;
-	char		**map;
-	char		*str_first;
-	int			len_r;
-	int			len_no;
-	int			len_so;
-	int			len_we;
-	int			len_ea;
-	int			len_c;
-	int			len_f;
-	int			len_s;
-	int			sum;
-	int			width;
-	int			height;
-	int			w_width;
-	int			w_height;
-	char		*textur_no;
-	char		*textur_so;
-	char		*textur_we;
-	char		*textur_ea;
-	char		*textur_s;
-	int			y;
-}				t_all;
 
 typedef struct	s_ingno {
 	void		*no_img;
@@ -122,7 +92,7 @@ typedef struct	s_ingea {
 	int			len_ea;
 }				t_imgea;
 
-typedef struct	s_ings {
+typedef struct	s_imgs {
 	void		*s_img;
 	char		*s_addr;
 	int			bits_per_pixel;
@@ -143,3 +113,40 @@ typedef struct	s_colors {
 	int			cbits_three;
 	int			cbits_color;
 }				t_colors;
+
+typedef struct	s_all // структура для всего вместе
+{
+	t_win		win;
+	t_plr		plr;
+	t_map		*obj;
+	t_imgno		imgno;
+	t_imgso		imgso;
+	t_imgwe		imgwe;
+	t_imgea		imgea;
+	t_imgs		imgs;
+	t_colors	colors;
+	int			flagno;
+	int			fd;
+	int			flag;
+	char		**map;
+	char		*str_first;
+	int			len_r;
+	int			len_no;
+	int			len_so;
+	int			len_we;
+	int			len_ea;
+	int			len_c;
+	int			len_f;
+	int			len_s;
+	int			sum;
+	int			width;
+	int			height;
+	int			w_width;
+	int			w_height;
+	char		*textur_no;
+	char		*textur_so;
+	char		*textur_we;
+	char		*textur_ea;
+	char		*textur_s;
+	int			y;
+}				t_all;
