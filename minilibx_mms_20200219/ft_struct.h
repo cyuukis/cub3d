@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/22 21:18:49 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/23 19:53:37 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ typedef struct	s_win //структура для окна
 	int			line_l;
 	int			bpp;
 	int			en;
+	int			img_w;
+	int			img_h;
 }				  t_win;
 
 typedef struct	s_point // структура для точки
@@ -119,12 +121,14 @@ typedef struct	s_all // структура для всего вместе
 	t_win		win;
 	t_plr		plr;
 	t_map		*obj;
-	t_imgno		imgno;
-	t_imgso		imgso;
-	t_imgwe		imgwe;
-	t_imgea		imgea;
-	t_imgs		imgs;
+	t_win		imgno;
+	t_win		imgso;
+	t_win		imgwe;
+	t_win		imgea;
+	t_win		imgs;
 	t_colors	colors;
+	int			x_tex;
+	int			y_tex;
 	int			flagno;
 	int			fd;
 	int			flag;
