@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/23 21:49:22 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/25 22:12:16 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,15 +195,8 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 
 void	ft_parses(char *map, t_all *len)
 {
-	//t_win	m_mlx;
-	//t_all	znach;
 	char	*str;
-	//t_imgno	m_img;
-	t_imgso	mso_img;
-	t_imgwe mwe_img;
-	t_imgea mea_img;
 	t_imgs ms_img;
-	//t_colors f_colors;
 
 	mlx_get_screen_size(len->win.mlx, &len->w_width, &len->w_height);
 	// printf("%c\n", *map);
@@ -252,11 +245,11 @@ void	ft_parses(char *map, t_all *len)
 		len->sum = len->sum + len->len_so;
 		map = map + 2;
 		len->textur_so = *ft_split(map, ' ');
-		if (!(mso_img.so_img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_no, &mso_img.img_wso, &mso_img.img_hso)))
+		if (!(len->imgso.img = mlx_xpm_file_to_image(len->win.mlx,
+		len->textur_so, &len->imgso.img_w, &len->imgso.img_h)))
 			return ;//ошибка какая-то
-		mso_img.so_addr = mlx_get_data_addr(mso_img.so_img,
-		&mso_img.bits_per_pixel, &mso_img.line_length, &mso_img.endian);
+		len->imgso.addr = mlx_get_data_addr(len->imgso.img,
+		&len->imgso.bpp, &len->imgso.line_l, &len->imgso.en);
 		//printf("3!!!!!!!!!!!!\n");
 	}
 	else if (*map == 'W' && *(map + 1) == 'E')
@@ -267,11 +260,11 @@ void	ft_parses(char *map, t_all *len)
 		len->sum = len->sum + len->len_we;
 		map = map + 2;
 		len->textur_we = *ft_split(map, ' ');
-		if (!(mwe_img.we_img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_no, &mwe_img.img_wwe, &mwe_img.img_hwe)))
+		if (!(len->imgwe.img = mlx_xpm_file_to_image(len->win.mlx,
+		len->textur_we, &len->imgwe.img_w, &len->imgwe.img_h)))
 			return ;//ошибка какая-то
-		mwe_img.we_addr = mlx_get_data_addr(mwe_img.we_img,
-		&mwe_img.bits_per_pixel, &mwe_img.line_length, &mwe_img.endian);
+		len->imgwe.addr = mlx_get_data_addr(len->imgwe.img,
+		&len->imgwe.bpp, &len->imgwe.line_l, &len->imgwe.en);
 		//printf("4!!!!!!!!!!!!\n");
 	}
 	else if (*map == 'E' && *(map + 1) == 'A')
@@ -282,11 +275,11 @@ void	ft_parses(char *map, t_all *len)
 		len->sum = len->sum + len->len_ea;
 		map = map + 2;
 		len->textur_ea = *ft_split(map, ' ');
-		if (!(mea_img.ea_img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_no, &mea_img.img_wea, &mea_img.img_hea)))
+		if (!(len->imgea.img = mlx_xpm_file_to_image(len->win.mlx,
+		len->textur_ea, &len->imgea.img_w, &len->imgea.img_h)))
 			return ;//ошибка какая-то
-		mea_img.ea_addr = mlx_get_data_addr(mea_img.ea_img,
-		&mea_img.bits_per_pixel, &mea_img.line_length, &mea_img.endian);
+		len->imgea.addr = mlx_get_data_addr(len->imgea.img,
+		&len->imgea.bpp, &len->imgea.line_l, &len->imgea.en);
 		//printf("5!!!!!!!!!!!!\n");
 	}
 	else if (*map == 'S')
@@ -404,14 +397,37 @@ int		my_pix_get(t_win *data, int x, int y)
 	return *(unsigned int*)dst;
 }
 
-void	my_bit_images(t_all *all, float x_w, float y_h, float start, float a)
+void	my_bit_images_no(t_all *all, float start, int y, float h)
 {
-	float h;
-	//float rect_w = all->imgno.img_w / x_w;
-	float rect_h = h / all->imgno.img_h;
-	//all->x_tex = x_w * rect_w;
-	all->y_tex = (a - start) / h;
+	float pix;
+
+	pix = h / all->imgno.img_h;
+	all->y_tex = ((float)y - start) / pix;
 }
+void	my_bit_images_so(t_all *all, float start, int y, float h)
+{
+	float pix;
+
+	pix = h / all->imgso.img_h;
+	all->y_tex = ((float)y - start) / pix;
+}
+
+void	my_bit_images_we(t_all *all, float start, int y, float h)
+{
+	float pix;
+
+	pix = h / all->imgwe.img_h;
+	all->y_tex = ((float)y - start) / pix;
+}
+
+void	my_bit_images_ea(t_all *all, float start, int y, float h)
+{
+	float pix;
+
+	pix = h / all->imgea.img_h;
+	all->y_tex = ((float)y - start) / pix;
+}
+
 void	my_mlx_pixel_put(t_win *data, int x, int y, int color)
 {
 	char	*dst;
@@ -421,18 +437,14 @@ void	my_mlx_pixel_put(t_win *data, int x, int y, int color)
 
 void	wall_3d(t_all *all, float h, float i, float x_w, float y_h)
 {
-	//float	h;
 	float	start;
 	float	end;
 	int		y;
 	int color;
-	float a;
+
 	y = 0;
-	// if (c > 0)
-		//h = all->height / c * cos(a - all->plr.direction);
 	start = all->height / 2 - h / 2;
 	end = all->height / 2 + h / 2;
-	a = end - start;
 	while (y < start)
 	{
 		my_mlx_pixel_put(&all->win, i, y, all->colors.fbits_color);
@@ -440,26 +452,58 @@ void	wall_3d(t_all *all, float h, float i, float x_w, float y_h)
 	}
 	while (y < all->height && y < end)
 	{
-		//printf("%d", all->flagno);
-		if (all->flagno == 4)
+		if (all->plr.angel < 0)
+			all->plr.angel += 2 * M_PI;
+		if (all->plr.angel > 2 * M_PI)
+			all->plr.angel -= 2 * M_PI;
+		if (all->flagno == -4)
 		{
 			//printf("%f\n", all->plr.direction);
-			if (all->plr.direction >= 0 && all->plr.direction <= M_PI)
+			if (all->plr.angel >= 0 && all->plr.angel <= M_PI)
+			{
+				x_w = x_w - (int)x_w;
+				all->x_tex = x_w * all->imgso.img_w;
+				my_bit_images_so(all, start, y, h);
+				color = my_pix_get(&all->imgso, all->x_tex, all->y_tex);
+				my_mlx_pixel_put(&all->win, i, y, color);
+				//my_mlx_pixel_put(&all->win, i, y, 0xFFFF00);
+			}
+			else if (all->plr.angel >= M_PI || all->plr.angel <= 2 * M_PI)
 			{
 				x_w = x_w - (int)x_w;
 				all->x_tex = x_w * all->imgno.img_w;
-				my_bit_images(all, x_w, h, start, y);
+				my_bit_images_no(all, start, y, h);
 				color = my_pix_get(&all->imgno, all->x_tex, all->y_tex);
 				my_mlx_pixel_put(&all->win, i, y, color);
-			}
-			else if (all->plr.direction >= M_PI && all->plr.direction <= 2 * M_PI)
-			{
-				my_mlx_pixel_put(&all->win, i, y, 0xFF0000);
+				//my_mlx_pixel_put(&all->win, i, y, 0x0000FF);
 			}
 		}
+		else if (all->flagno == 4)
+		{
+			if (all->plr.angel >= M_PI_2 && all->plr.angel <= 3 * M_PI_2)
+			{
+				y_h = y_h - (int)y_h;
+				all->x_tex = y_h * all->imgwe.img_w;
+				my_bit_images_we(all, start, y, h);
+				color = my_pix_get(&all->imgwe, all->x_tex, all->y_tex);
+				my_mlx_pixel_put(&all->win, i, y, color);
+				//my_mlx_pixel_put(&all->win, i, y, 0xCC0000);
+			}
+			else if (all->plr.angel >= 3 * M_PI_2 || all->plr.angel <= 9.42)
+			{
+				y_h = y_h - (int)y_h;
+				all->x_tex = y_h * all->imgea.img_w;
+				my_bit_images_ea(all, start, y, h);
+				color = my_pix_get(&all->imgea, all->x_tex, all->y_tex);
+				my_mlx_pixel_put(&all->win, i, y, color);
+				//my_mlx_pixel_put(&all->win, i, y, 0x00FF66);
+			}
+		}
+
 		//my_mlx_pixel_put(&all->win, i, y, 0xFF0000);
 		y++;
 	}
+	//printf("%f\n", all->plr.angel);
 	while (y < all->height)
 	{
 		my_mlx_pixel_put(&all->win, i, y, all->colors.cbits_color);
@@ -473,22 +517,22 @@ void		plr_luch(t_all *all, float x_p, float y_p)
 	float x;
 	float y;
 	float c;
-	float angel;
+	//float angel;
 	float step;
 	int i;
 	float a;
 
 	c = 0;
-	fov = 0.66F;
+	fov = 0.5F;
 	i = 0;
 	x = 0;
-	angel = all->plr.direction - fov / 2;
+	all->plr.angel = all->plr.direction - fov / 2;
 	step = fov / all->width;
 	while (i < all->width)
 	{
 		c = 0;
-		x = x_p + c * cos(angel);
-		y = y_p + c * sin(angel);
+		x = x_p + c * cos(all->plr.angel);
+		y = y_p + c * sin(all->plr.angel);
 		// while (all->map[(int)y][(int)x] != '1')
 		// {
 		// 	x = x_p + c * cos(angel);
@@ -498,45 +542,25 @@ void		plr_luch(t_all *all, float x_p, float y_p)
 		// }
 		while (1)
 		{
-			x = x_p + c * cos(angel);
-			if (all->map[(int)y][(int)x] == '1') // S N
-			{
-				// if (all->plr.direction >= 0 &&
-				// all->plr.direction <= M_PI)
-				// {
-				// 	all->imgno.no_addr;
-				// }
-				// else if (all->plr.direction >= M_PI &&
-				// all->plr.direction <= 2 * M_PI)
-				// {
-
-				// }
-
-				break ;
-			}
-			y = y_p + c * sin(angel);
-			if (all->map[(int)y][(int)x] == '1') // E W
+			x = x_p + c * cos(all->plr.angel);
+			if (all->map[(int)y][(int)x] == '1') // W E
 			{
 				all->flagno = 4;
-				// if (all->plr.direction >= M_PI_2 &&
-				// all->plr.direction <= 3 * M_PI_4)
-				// {
-
-				// }
-				// else if (all->plr.direction >= 3 * M_PI_4 &&
-				// all->plr.direction <= M_PI_2)
-				// {
-
-				// }
+				break ;
+			}
+			y = y_p + c * sin(all->plr.angel);
+			if (all->map[(int)y][(int)x] == '1') // S N
+			{
+				all->flagno = -4;
 				break ;
 			}
 			c += 0.005F;
 			my_mlx_pixel_put(&all->win, x, y, 0xFFFF00);
 		}
-		angel += step;
+		all->plr.angel += step;
 		i++;
 		if (c > 0)
-			a = all->height / c * cos(angel - all->plr.direction);
+			a = all->height / c * cos(all->plr.angel - all->plr.direction);
 
 		//wall_3d(all, c, angel, i);
 		wall_3d(all, a, i, x, y);
@@ -707,6 +731,7 @@ int		key(int keycode, t_all *all)
 	}
 	plr_luch(all, all->plr.x, all->plr.y);
 	//wall_3d(all, c);
+	//mlx_put_image_to_window(all->win.mlx, all->win.win, all->win.img, 0, 0);
 	mlx_put_image_to_window(all->win.mlx, all->win.win, all->win.img, 0, 0);
 	return (0);
 }
@@ -723,7 +748,7 @@ void	draw_map(t_all *map)
 	map->win.img = mlx_new_image(map->win.mlx, 1920, 1080);
 	map->win.addr = mlx_get_data_addr(map->win.img,
 	&map->win.bpp, &map->win.line_l, &map->win.en);
-	mlx_hook(map->win.win, 2, 1L << 0, key, map);
+
 	while (++x < (map->y + 1) * 1)
 	{
 		while (++j < ft_strlen(map->map[x / 1]) * 1)
@@ -751,6 +776,7 @@ void	draw_map(t_all *map)
 		}
 		j = -1;
 	}
+	mlx_hook(map->win.win, 2, 1L << 0, key, map);
 	mlx_put_image_to_window(map->win.mlx, map->win.win, map->win.img, 0, 0);
 	mlx_loop(map->win.mlx);
 }

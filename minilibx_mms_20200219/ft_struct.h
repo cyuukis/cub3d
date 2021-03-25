@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/23 19:53:37 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/25 20:16:26 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ typedef struct	s_plr //структура для игрока и луча
 	float		direction;
 	float		x;
 	float		y;
-	float		dirx;
-	float		diry;
+	float		angel;
 	float		start;
 	float		end;
 	int			flag;

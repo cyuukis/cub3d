@@ -1,6 +1,11 @@
 {
 	"files.associations": {
 		"ft_struct.h": "c",
-		"__locale": "c"
+		"__locale": "c",
+		"algorithm": "c",
+		"locale": "c",
+		"__threading_support": "c",
+		"atomic": "c",
+		"mutex": "c"
 	}
 }
