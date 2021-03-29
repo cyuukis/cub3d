@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/25 22:12:16 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/29 21:07:12 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,13 @@ void	ft_colorc(t_all *all)
 	//printf("%x", c_c.cbits_color);
 }
 
+void	my_mlx_pixel_put(t_win *data, int x, int y, int color)
+{
+	char	*dst;
+	dst = data->addr + (y * data->line_l + x * (data->bpp / 8));
+	*(unsigned int*)dst = color;
+}
+
 void	direction_player(char sym, t_all *dote)
 {
 	if (sym == 'N')
@@ -74,11 +81,45 @@ void exit_error()
 	write(2,"Error in the parser\n", 20);
 }
 
-void	ft_parses_map2(int i, int j, t_plr *dote)
+void draw_sprite1(t_all *all, float x, float y)
 {
-	t_map obj[dote->place_two];
-	obj[dote->place_two].x = j + 0.5;
-	obj[dote->place_two].y = i + 0.5;
+	float dx;
+	float dy;
+	float distance;
+	float teta;
+	float gamma;
+	int delta_rays;
+	float current_ray;
+	float distance_to_spr;
+	int proj_height;
+	int proj_we;
+
+	printf("%f, %f\n", x, y);
+	dx = x - all->plr.x;
+	dy = y - all->plr.y;
+	distance = sqrt((dx * dx) + (dy * dy));
+	teta = atan2(dy, dx);
+	gamma = teta - all->plr.angel;
+	printf("%f, %f, %f", distance, teta, gamma);
+	if ((dx > 0 && (all->plr.angel >= M_PI && all->plr.angel <= 2 * M_PI)) || (dx < 0 && dy < 0))
+	{
+		gamma += 2 * M_PI;
+	}
+	delta_rays = (int)(gamma / (all->fov/all->plr.direction));
+	current_ray = all->plr.direction + delta_rays;
+	distance_to_spr *= cos((all->fov/2) - current_ray * (all->fov/all->plr.direction));
+	proj_height = (int)(-current_ray/4);
+	proj_we = proj_height;
+}
+
+void	ft_parses_map2(int y, int x, t_all *all)
+{
+	static int count;
+
+	all->obj[count].x = x + 0.5;
+	all->obj[count].y = y + 0.5;
+	draw_sprite1(all, all->obj[count].x, all->obj[count].y);
+	count++;
 }
 
 void	ft_parses_map(int i, int j, char sym, t_all *len)
@@ -175,8 +216,10 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 		j = -1;
 			//ft_putendl_fd(map[i]);
 	}
+	//printf("%d\n", len->plr.place_two);
 	i = -1;
 	j = -1;
+	len->obj = (t_map *)malloc(sizeof(t_map) * len->plr.place_two);
 	while (++i < len->y)
 	{
 		while (++j < ft_strlen(len->map[i]))
@@ -184,19 +227,20 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 			sym = len->map[i][j];
 			if (ft_strrchr("2", sym))
 			{
-				//ft_parses_map2(i, j, &plr);
+
+				ft_parses_map2(i, j, len);
 			}
 		}
 		j = -1;
 	}
-	//printf("%f", len->plr.y);
+//	printf("%f\n", len->obj.x);
 	return (len->map);
 }
 
 void	ft_parses(char *map, t_all *len)
 {
 	char	*str;
-	t_imgs ms_img;
+	//t_imgs ms_img;
 
 	mlx_get_screen_size(len->win.mlx, &len->w_width, &len->w_height);
 	// printf("%c\n", *map);
@@ -290,11 +334,11 @@ void	ft_parses(char *map, t_all *len)
 		len->sum = len->sum + len->len_s;
 		map++;
 		len->textur_s = *ft_split(map, ' ');
-		if (!(ms_img.s_img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_no, &ms_img.img_ws, &ms_img.img_hs)))
+		if (!(len->imgs.img = mlx_xpm_file_to_image(len->win.mlx,
+		len->textur_s, &len->imgs.img_w, &len->imgs.img_h)))
 			return ;//ошибка какая-то
-		ms_img.s_addr = mlx_get_data_addr(ms_img.s_img,
-		&ms_img.bits_per_pixel, &ms_img.line_length, &ms_img.endian);
+		len->imgs.addr = mlx_get_data_addr(len->imgs.img,
+		&len->imgs.bpp, &len->imgs.line_l, &len->imgs.en);
 		//printf("6!!!!!!!!!!!!\n");
 	}
 	else if (*map == 'F')
@@ -428,12 +472,7 @@ void	my_bit_images_ea(t_all *all, float start, int y, float h)
 	all->y_tex = ((float)y - start) / pix;
 }
 
-void	my_mlx_pixel_put(t_win *data, int x, int y, int color)
-{
-	char	*dst;
-	dst = data->addr + (y * data->line_l + x * (data->bpp / 8));
-	*(unsigned int*)dst = color;
-}
+
 
 void	wall_3d(t_all *all, float h, float i, float x_w, float y_h)
 {
@@ -513,21 +552,20 @@ void	wall_3d(t_all *all, float h, float i, float x_w, float y_h)
 
 void		plr_luch(t_all *all, float x_p, float y_p)
 {
-	float fov;
+	//float fov;
 	float x;
 	float y;
 	float c;
-	//float angel;
 	float step;
 	int i;
 	float a;
 
 	c = 0;
-	fov = 0.5F;
+	all->fov = 0.5F;
 	i = 0;
 	x = 0;
-	all->plr.angel = all->plr.direction - fov / 2;
-	step = fov / all->width;
+	all->plr.angel = all->plr.direction - all->fov / 2;
+	step = all->fov / all->width;
 	while (i < all->width)
 	{
 		c = 0;
@@ -560,9 +598,7 @@ void		plr_luch(t_all *all, float x_p, float y_p)
 		all->plr.angel += step;
 		i++;
 		if (c > 0)
-			a = all->height / c * cos(all->plr.angel - all->plr.direction);
-
-		//wall_3d(all, c, angel, i);
+			a = all->height / (c * cos(all->plr.angel - all->plr.direction));
 		wall_3d(all, a, i, x, y);
 	}
 	//printf("%f", a);
@@ -822,6 +858,7 @@ int		main(int argc, char **argv)
 		ft_lstadd_back(&head, ft_lstnew(line));
 	}
 	make_map(&head, ft_lstsize(head), &len, max);
+	printf("%f, %f\n", len.obj->x, len.obj->y);
 	//printf("%f", len.plr.y);
 	draw_map(&len);
 	//mlx_loop(len.win.mlx);

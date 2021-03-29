@@ -9,7 +9,7 @@
 			"request": "launch",
 			"name": "Debug",
 			"program": "${workspaceFolder}/minilibx_mms_20200219/a.out",
-			"args": [],
+			"args": ["map.cub"],
 			"cwd": "${workspaceFolder}"
 		}
 	]
