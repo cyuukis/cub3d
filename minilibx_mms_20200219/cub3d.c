@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/29 21:07:12 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/31 21:33:52 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,45 +81,137 @@ void exit_error()
 	write(2,"Error in the parser\n", 20);
 }
 
-void draw_sprite1(t_all *all, float x, float y)
+int		my_pix_get(t_win *data, int x, int y)
 {
-	float dx;
-	float dy;
+	char	*dst;
+	dst = data->addr + (y * data->line_l + x * (data->bpp / 8));
+	return *(unsigned int*)dst;
+}
+
+void draw_sprite1(t_all *all, float dx, float dy)
+{
+	// float dx;
+	// float dy;
 	float distance;
 	float teta;
 	float gamma;
 	int delta_rays;
 	float current_ray;
 	float distance_to_spr;
-	int proj_height;
-	int proj_we;
+	float scr_size;
+	int i = 0;
+	int j = 0;
 
-	printf("%f, %f\n", x, y);
-	dx = x - all->plr.x;
-	dy = y - all->plr.y;
-	distance = sqrt((dx * dx) + (dy * dy));
+	// printf("%f, %f\n", x, y);
+	// printf("%f, %f\n", all->plr.x, all->plr.y);
+	// dx = x - all->plr.x;
+	// dy = y - all->plr.y;
+	// printf("%f, %f\n", dx, dy);
+	// distance = sqrt((dx * dx) + (dy * dy));
+	// teta = atan2(dy, dx);
+	// gamma = teta - all->plr.angel;
+	// printf("%f, %f, %f\n  ", distance, teta, gamma);
+	// // if ((dx > 0 && (all->plr.angel >= M_PI && all->plr.angel <= 2 * M_PI)) || (dx < 0 && dy < 0))
+	// // {
+	// // 	gamma += 2 * M_PI;
+	// // }
+	// while(gamma > M_PI)
+	// 	teta -= 2 * M_PI;
+	// while(gamma < -M_PI)
+	// 	teta += 2 * M_PI;
+	// delta_rays = (int)(gamma / (all->fov/all->plr.direction));
+	// current_ray = all->plr.direction + delta_rays;
+	// //distance_to_spr *= cos((all->fov/2) - (current_ray * (all->fov/all->plr.direction));
+	// scr_size = all->height / sqrt(distance);
+	// printf("%d\n", all->height);
+	// // printf("%f\n", distance);
+	// printf("!!!!%d\n", scr_size);
+	// all->coordin.proj_height = all->height / 2 - scr_size / 2;
+	// all->coordin.proj_we = (gamma + 2 * M_PI_2) * all->width + all->width / 2 - scr_size / 2;
+	// printf("%d, %d \n", all->coordin.proj_we, all->coordin.proj_height);
+	// int ix = all->coordin.proj_we;
+	// int jy = all->coordin.proj_height;
+	// while (ix < scr_size)
+	// {
+	// 	if (all->coordin.proj_we <= (all->width / 2))
+	// 	{
+	// 		while (jy < scr_size)
+	// 		{
+	// 			if (all->coordin.proj_height <= all->height)
+	// 			{
+	// 				i = (float)scr_size / all->coordin.proj_we;
+	// 				j = (float)scr_size / all->coordin.proj_height;
+	// 				//printf("|%d, %d|\n", i, j);
+	// 				//int color = my_pix_get(&all->imgs, all->coordin.proj_we, all->coordin.proj_height);
+	// 				my_mlx_pixel_put(&all->win, i, j, 0x00FF00);
+	// 			}
+	// 			jy++;
+	// 		}
+	// 	}
+	// 	ix++;
+	// }
+	// printf("%d, %d \n", all->coordin.proj_we, all->coordin.proj_height);
+
+	//dx = x - all->plr.x;
+	//dy = y - all->plr.y;
+	//dx =
+	printf("@%f, %f\n", dx, dy);
 	teta = atan2(dy, dx);
-	gamma = teta - all->plr.angel;
-	printf("%f, %f, %f", distance, teta, gamma);
-	if ((dx > 0 && (all->plr.angel >= M_PI && all->plr.angel <= 2 * M_PI)) || (dx < 0 && dy < 0))
+	while (teta - all->plr.angel > M_PI)
+		teta -= 2 * M_PI;
+	while (teta - all->plr.angel < -M_PI)
+		teta += 2 * M_PI;
+	distance = sqrt(pow(dx, 2) + pow(dy, 2));
+	scr_size = all->height / distance;
+	all->coordin.proj_height = all->height / 2 - scr_size / 2;
+	all->coordin.proj_we = -cos((teta - all->plr.angel) + M_PI_2) * all->width + all->width / 2 - scr_size / 2;
+	int ix = all->coordin.proj_we;
+	int jy = all->coordin.proj_height;
+	printf("%f\n", scr_size);
+	printf("%f\n", distance);
+	printf("%f\n", teta);
+	printf("%d\n", all->coordin.proj_height);
+	printf("%d\n", all->coordin.proj_we);
+//	printf("%f, %f\n", y, x);
+	while (ix < scr_size + all->coordin.proj_we)
 	{
-		gamma += 2 * M_PI;
+		//if (all->coordin.proj_we <= (all->width / 2))
+		//{
+			while (jy < scr_size + all->coordin.proj_height)
+			{
+				i = (ix - all->coordin.proj_we); /// (scr_size / all->imgs.img_w);
+				j = (jy - all->coordin.proj_height); /// (scr_size / all->imgs.img_h);
+				//if (all->coordin.proj_height <= all->height)
+				//{
+					//printf("|%d, %d|\n", i, j);
+					int color = my_pix_get(&all->imgs, i, j);
+					my_mlx_pixel_put(&all->win, ix, jy, color);
+				//}
+				jy++;
+			}
+		//}
+		ix++;
 	}
-	delta_rays = (int)(gamma / (all->fov/all->plr.direction));
-	current_ray = all->plr.direction + delta_rays;
-	distance_to_spr *= cos((all->fov/2) - current_ray * (all->fov/all->plr.direction));
-	proj_height = (int)(-current_ray/4);
-	proj_we = proj_height;
 }
 
 void	ft_parses_map2(int y, int x, t_all *all)
 {
 	static int count;
+	float dx;
+	float dy;
+
 
 	all->obj[count].x = x + 0.5;
 	all->obj[count].y = y + 0.5;
-	draw_sprite1(all, all->obj[count].x, all->obj[count].y);
+	all->obj[count].dx = all->obj[count].x - all->plr.x;
+	all->obj[count].dy = all->obj[count].y - all->plr.y;
+	//all->obj[count].dir =  pow(dx, 2) + pow(dy, 2);
+	//draw_sprite1(all, all->obj[count].x, all->obj[count].y);
+	// printf("%f, %f\n", all->plr.x, all->plr.y);
+	// printf("%f, %f\n", all->obj[count].x, all->obj[count].y);
+	// printf("!!!!!!!%f, %f\n", all->obj[count].dx, all->obj[count].dy);
 	count++;
+	all->count = count;
 }
 
 void	ft_parses_map(int i, int j, char sym, t_all *len)
@@ -220,6 +312,7 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 	i = -1;
 	j = -1;
 	len->obj = (t_map *)malloc(sizeof(t_map) * len->plr.place_two);
+	// len->obj = '\0';
 	while (++i < len->y)
 	{
 		while (++j < ft_strlen(len->map[i]))
@@ -434,12 +527,12 @@ void	ft_parses(char *map, t_all *len)
 	// }
 }
 
-int		my_pix_get(t_win *data, int x, int y)
-{
-	char	*dst;
-	dst = data->addr + (y * data->line_l + x * (data->bpp / 8));
-	return *(unsigned int*)dst;
-}
+// int		my_pix_get(t_win *data, int x, int y)
+// {
+// 	char	*dst;
+// 	dst = data->addr + (y * data->line_l + x * (data->bpp / 8));
+// 	return *(unsigned int*)dst;
+// }
 
 void	my_bit_images_no(t_all *all, float start, int y, float h)
 {
@@ -480,7 +573,9 @@ void	wall_3d(t_all *all, float h, float i, float x_w, float y_h)
 	float	end;
 	int		y;
 	int color;
+	int k;
 
+	k = 0;
 	y = 0;
 	start = all->height / 2 - h / 2;
 	end = all->height / 2 + h / 2;
@@ -547,6 +642,11 @@ void	wall_3d(t_all *all, float h, float i, float x_w, float y_h)
 	{
 		my_mlx_pixel_put(&all->win, i, y, all->colors.cbits_color);
 		y++;
+	}
+	while(k < all->count)
+	{
+		draw_sprite1(all, all->obj[k].dx, all->obj[k].dy);
+		k++;
 	}
 }
 
@@ -809,6 +909,10 @@ void	draw_map(t_all *map)
 			{
 				my_mlx_pixel_put(&map->win, j, x, 0x000FF00);
 			}
+			if (map->map[x / 1][j / 1] == '2')
+			{
+				my_mlx_pixel_put(&map->win, j, x, 0xCC0000);
+			}
 		}
 		j = -1;
 	}
@@ -823,6 +927,7 @@ int		main(int argc, char **argv)
 	t_all	len;
 	// t_plr plr;
 	int max;
+	int i = 0;
 
 	len.win.mlx = mlx_init();
 	max = 0;
@@ -858,7 +963,7 @@ int		main(int argc, char **argv)
 		ft_lstadd_back(&head, ft_lstnew(line));
 	}
 	make_map(&head, ft_lstsize(head), &len, max);
-	printf("%f, %f\n", len.obj->x, len.obj->y);
+	//printf("%f, %f\n", len.obj->x, len.obj->y);
 	//printf("%f", len.plr.y);
 	draw_map(&len);
 	//mlx_loop(len.win.mlx);

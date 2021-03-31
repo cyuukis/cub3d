@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/29 19:54:06 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/03/31 19:54:28 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ typedef struct	s_map
 {
 	float	x;
 	float	y;
+	//float	dir;
+	float	dx;
+	float	dy;
 }				t_map;
 
 typedef struct	s_plr //структура для игрока и луча
@@ -49,17 +52,6 @@ typedef struct	s_plr //структура для игрока и луча
 	int			place_two;
 }				t_plr;
 
-typedef struct	s_imgs {
-	void		*s_img;
-	char		*s_addr;
-	int			bits_per_pixel;
-	int			line_length;
-	int			endian;
-	int			img_ws;
-	int			img_hs;
-	int			len_s;
-}				t_imgs;
-
 typedef struct	s_colors {
 	int			fbits_one;
 	int			fbits_two;
@@ -70,6 +62,12 @@ typedef struct	s_colors {
 	int			cbits_three;
 	int			cbits_color;
 }				t_colors;
+
+typedef struct s_coordin
+{
+	int proj_height;
+	int proj_we;
+}	t_coordin;
 
 typedef struct	s_all // структура для всего вместе
 {
@@ -82,6 +80,7 @@ typedef struct	s_all // структура для всего вместе
 	t_win		imgea;
 	t_win		imgs;
 	t_colors	colors;
+	t_coordin	coordin;
 	int			x_tex;
 	int			y_tex;
 	int			flagno;
@@ -109,4 +108,5 @@ typedef struct	s_all // структура для всего вместе
 	char		*textur_s;
 	int			y;
 	float		fov;
+	int			count;
 }				t_all;
