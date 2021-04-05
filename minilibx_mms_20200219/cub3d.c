@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/31 21:33:52 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/05 20:25:13 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,62 +99,9 @@ void draw_sprite1(t_all *all, float dx, float dy)
 	float current_ray;
 	float distance_to_spr;
 	float scr_size;
-	int i = 0;
-	int j = 0;
+	float i = 0;
+	float j = 0;
 
-	// printf("%f, %f\n", x, y);
-	// printf("%f, %f\n", all->plr.x, all->plr.y);
-	// dx = x - all->plr.x;
-	// dy = y - all->plr.y;
-	// printf("%f, %f\n", dx, dy);
-	// distance = sqrt((dx * dx) + (dy * dy));
-	// teta = atan2(dy, dx);
-	// gamma = teta - all->plr.angel;
-	// printf("%f, %f, %f\n  ", distance, teta, gamma);
-	// // if ((dx > 0 && (all->plr.angel >= M_PI && all->plr.angel <= 2 * M_PI)) || (dx < 0 && dy < 0))
-	// // {
-	// // 	gamma += 2 * M_PI;
-	// // }
-	// while(gamma > M_PI)
-	// 	teta -= 2 * M_PI;
-	// while(gamma < -M_PI)
-	// 	teta += 2 * M_PI;
-	// delta_rays = (int)(gamma / (all->fov/all->plr.direction));
-	// current_ray = all->plr.direction + delta_rays;
-	// //distance_to_spr *= cos((all->fov/2) - (current_ray * (all->fov/all->plr.direction));
-	// scr_size = all->height / sqrt(distance);
-	// printf("%d\n", all->height);
-	// // printf("%f\n", distance);
-	// printf("!!!!%d\n", scr_size);
-	// all->coordin.proj_height = all->height / 2 - scr_size / 2;
-	// all->coordin.proj_we = (gamma + 2 * M_PI_2) * all->width + all->width / 2 - scr_size / 2;
-	// printf("%d, %d \n", all->coordin.proj_we, all->coordin.proj_height);
-	// int ix = all->coordin.proj_we;
-	// int jy = all->coordin.proj_height;
-	// while (ix < scr_size)
-	// {
-	// 	if (all->coordin.proj_we <= (all->width / 2))
-	// 	{
-	// 		while (jy < scr_size)
-	// 		{
-	// 			if (all->coordin.proj_height <= all->height)
-	// 			{
-	// 				i = (float)scr_size / all->coordin.proj_we;
-	// 				j = (float)scr_size / all->coordin.proj_height;
-	// 				//printf("|%d, %d|\n", i, j);
-	// 				//int color = my_pix_get(&all->imgs, all->coordin.proj_we, all->coordin.proj_height);
-	// 				my_mlx_pixel_put(&all->win, i, j, 0x00FF00);
-	// 			}
-	// 			jy++;
-	// 		}
-	// 	}
-	// 	ix++;
-	// }
-	// printf("%d, %d \n", all->coordin.proj_we, all->coordin.proj_height);
-
-	//dx = x - all->plr.x;
-	//dy = y - all->plr.y;
-	//dx =
 	printf("@%f, %f\n", dx, dy);
 	teta = atan2(dy, dx);
 	while (teta - all->plr.angel > M_PI)
@@ -164,32 +111,35 @@ void draw_sprite1(t_all *all, float dx, float dy)
 	distance = sqrt(pow(dx, 2) + pow(dy, 2));
 	scr_size = all->height / distance;
 	all->coordin.proj_height = all->height / 2 - scr_size / 2;
-	all->coordin.proj_we = -cos((teta - all->plr.angel) + M_PI_2) * all->width + all->width / 2 - scr_size / 2;
-	int ix = all->coordin.proj_we;
-	int jy = all->coordin.proj_height;
+	all->coordin.proj_we = -cos(teta - all->plr.angel + M_PI_2) * all->width + all->width / 2 - scr_size / 2;
+	float ix = all->coordin.proj_we;
+	float jy = all->coordin.proj_height;
 	printf("%f\n", scr_size);
 	printf("%f\n", distance);
 	printf("%f\n", teta);
 	printf("%d\n", all->coordin.proj_height);
 	printf("%d\n", all->coordin.proj_we);
 //	printf("%f, %f\n", y, x);
+	if (teta - all->plr.angel < -M_PI_2 || teta - all->plr.angel > M_PI_2)
+		return ;
 	while (ix < scr_size + all->coordin.proj_we)
 	{
-		//if (all->coordin.proj_we <= (all->width / 2))
-		//{
+		if (all->coordin.proj_we < all->width && all->coordin.proj_we > 0)
+		{
 			while (jy < scr_size + all->coordin.proj_height)
 			{
-				i = (ix - all->coordin.proj_we); /// (scr_size / all->imgs.img_w);
-				j = (jy - all->coordin.proj_height); /// (scr_size / all->imgs.img_h);
-				//if (all->coordin.proj_height <= all->height)
-				//{
+				//scr_size = scr_size / all->imgs.img_w;
+				i = (ix - all->coordin.proj_we);
+				j = (jy - all->coordin.proj_height);
+				if (all->coordin.proj_height < all->height && all->coordin.proj_height > 0)
+				{
 					//printf("|%d, %d|\n", i, j);
 					int color = my_pix_get(&all->imgs, i, j);
 					my_mlx_pixel_put(&all->win, ix, jy, color);
-				//}
+				}
 				jy++;
 			}
-		//}
+		}
 		ix++;
 	}
 }
