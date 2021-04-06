@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/05 20:25:13 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/06 22:27:59 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,52 +88,54 @@ int		my_pix_get(t_win *data, int x, int y)
 	return *(unsigned int*)dst;
 }
 
-void draw_sprite1(t_all *all, float dx, float dy)
+void draw_sprite1(t_all *all, float x, float y)
 {
 	// float dx;
 	// float dy;
 	float distance;
 	float teta;
 	float gamma;
-	int delta_rays;
-	float current_ray;
-	float distance_to_spr;
-	float scr_size;
-	float i = 0;
-	float j = 0;
+	int scr_size;
+	int i = 0;
+	int j = 0;
+	float jy = 0;
 
-	printf("@%f, %f\n", dx, dy);
-	teta = atan2(dy, dx);
+	//printf("@%f, %f\n", dx, dy);
+	teta = atan2(y - all->plr.y, x - all->plr.x);
 	while (teta - all->plr.angel > M_PI)
 		teta -= 2 * M_PI;
 	while (teta - all->plr.angel < -M_PI)
 		teta += 2 * M_PI;
-	distance = sqrt(pow(dx, 2) + pow(dy, 2));
+	if (teta - all->plr.angel < -M_PI_2 || teta - all->plr.angel > M_PI_2)
+		return ;
+	distance = sqrt(pow(all->plr.x - x, 2) + pow(all->plr.y - y, 2));
 	scr_size = all->height / distance;
 	all->coordin.proj_height = all->height / 2 - scr_size / 2;
 	all->coordin.proj_we = -cos(teta - all->plr.angel + M_PI_2) * all->width + all->width / 2 - scr_size / 2;
+	//all->coordin.proj_we = (teta - all->plr.angel + M_PI_2) / all->fov * (all->width / 2) + (all->width / 2) / 2 - all->imgs.img_w / 2;
 	float ix = all->coordin.proj_we;
-	float jy = all->coordin.proj_height;
-	printf("%f\n", scr_size);
-	printf("%f\n", distance);
-	printf("%f\n", teta);
-	printf("%d\n", all->coordin.proj_height);
-	printf("%d\n", all->coordin.proj_we);
+
+	// printf("%d\n", scr_size);
+	// printf("%f\n", distance);
+	// printf("%f\n", teta);
+	// printf("%d\n", all->coordin.proj_height);
+	// printf("%d\n", all->coordin.proj_we);
 //	printf("%f, %f\n", y, x);
-	if (teta - all->plr.angel < -M_PI_2 || teta - all->plr.angel > M_PI_2)
-		return ;
+
 	while (ix < scr_size + all->coordin.proj_we)
 	{
-		if (all->coordin.proj_we < all->width && all->coordin.proj_we > 0)
+		if (ix < all->width && ix > 0)
 		{
+			//printf("^^^^^");
+			jy = all->coordin.proj_height;
 			while (jy < scr_size + all->coordin.proj_height)
 			{
-				//scr_size = scr_size / all->imgs.img_w;
-				i = (ix - all->coordin.proj_we);
-				j = (jy - all->coordin.proj_height);
-				if (all->coordin.proj_height < all->height && all->coordin.proj_height > 0)
+				i = 0;
+				j = 0;
+				if (jy < all->height && jy > 0)
 				{
-					//printf("|%d, %d|\n", i, j);
+					i = ((int)ix - all->coordin.proj_we) / ((float)scr_size / all->imgs.img_w);
+					j = ((int)jy - all->coordin.proj_height) / ((float)scr_size / all->imgs.img_h);
 					int color = my_pix_get(&all->imgs, i, j);
 					my_mlx_pixel_put(&all->win, ix, jy, color);
 				}
@@ -153,8 +155,8 @@ void	ft_parses_map2(int y, int x, t_all *all)
 
 	all->obj[count].x = x + 0.5;
 	all->obj[count].y = y + 0.5;
-	all->obj[count].dx = all->obj[count].x - all->plr.x;
-	all->obj[count].dy = all->obj[count].y - all->plr.y;
+	// all->obj[count].dx = all->obj[count].x - all->plr.x;
+	// all->obj[count].dy = all->obj[count].y - all->plr.y;
 	//all->obj[count].dir =  pow(dx, 2) + pow(dy, 2);
 	//draw_sprite1(all, all->obj[count].x, all->obj[count].y);
 	// printf("%f, %f\n", all->plr.x, all->plr.y);
@@ -207,6 +209,58 @@ char	*ft_spacex(char *line, int max)
 	return (str);
 }
 
+void	make_map3(t_all *len)
+{
+	int		i;
+	int		j;
+	char	sym;
+
+	i = -1;
+	j = -1;
+	len->obj = (t_map *)malloc(sizeof(t_map) * len->plr.place_two);
+	while (++i < len->y)
+	{
+		while (++j < ft_strlen(len->map[i]))
+		{
+			sym = len->map[i][j];
+			if (ft_strrchr("2", sym))
+			{
+
+				ft_parses_map2(i, j, len);
+			}
+		}
+		j = -1;
+	}
+}
+
+void	make_map2(t_all *len)
+{
+	int		i;
+	int		j;
+	char	sym;
+
+	j = -1;
+	i = -1;
+	while (++i < len->y)
+	{
+		while (++j < ft_strlen(len->map[i]))
+		{
+			sym = len->map[i][j];
+			if (!(ft_strrchr(OBJ, sym)))
+			{
+				printf("error");//ошибка
+				break ;
+			}
+			if (ft_strrchr(OBJJ, sym))
+				(((len->map[i - 1][j] != ' ') && (len->map[i + 1][j] != ' ')
+				&& (len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' '))
+				? ft_parses_map(i, j, len->map[i][j], len) : printf("error"));
+		}
+		j = -1;
+	}
+	make_map3(len);
+}
+
 char	**make_map(t_list **head, int size, t_all *len, int max)
 {
 	//char	**map;
@@ -231,53 +285,255 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 		tmp = tmp->next;
 		len->y = i;
 	}
-	i = -1;
-	while (++i < len->y)
-	{
-		while (++j < ft_strlen(len->map[i]))
-		{
-			sym = len->map[i][j];
-			if (!(ft_strrchr(OBJ, sym)))
-			{
-				printf("error");//ошибка
-				//printf("|%c|", sym);
-				break ;
-			}
-			if (ft_strrchr(OBJJ, sym))
-			{
-				//printf("|%c|", sym);
-				(((len->map[i - 1][j] != ' ') && (len->map[i + 1][j] != ' ')
-				&& (len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' '))
-				? ft_parses_map(i, j, len->map[i][j], len) : printf("error"));
-				//printf("%f, %f", dot.x, dot.y);
-			}
+	//i = -1;
+	make_map2(len);
+	// while (++i < len->y)
+	// {
+	// 	while (++j < ft_strlen(len->map[i]))
+	// 	{
+	// 		sym = len->map[i][j];
+	// 		if (!(ft_strrchr(OBJ, sym)))
+	// 		{
+	// 			printf("error");//ошибка
+	// 			//printf("|%c|", sym);
+	// 			break ;
+	// 		}
+	// 		if (ft_strrchr(OBJJ, sym))
+	// 		{
+	// 			//printf("|%c|", sym);
+	// 			(((len->map[i - 1][j] != ' ') && (len->map[i + 1][j] != ' ')
+	// 			&& (len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' '))
+	// 			? ft_parses_map(i, j, len->map[i][j], len) : printf("error"));
+	// 			//printf("%f, %f", dot.x, dot.y);
+	// 		}
 
-		}
-		//printf("|%s|\n", len->map[i]);
-		//printf("\n");
-		j = -1;
-			//ft_putendl_fd(map[i]);
-	}
-	//printf("%d\n", len->plr.place_two);
-	i = -1;
-	j = -1;
-	len->obj = (t_map *)malloc(sizeof(t_map) * len->plr.place_two);
-	// len->obj = '\0';
-	while (++i < len->y)
-	{
-		while (++j < ft_strlen(len->map[i]))
-		{
-			sym = len->map[i][j];
-			if (ft_strrchr("2", sym))
-			{
+	// 	}
+	// 	//printf("|%s|\n", len->map[i]);
+	// 	//printf("\n");
+	// 	j = -1;
+	// 		//ft_putendl_fd(map[i]);
+	// }
+	// //printf("%d\n", len->plr.place_two);
+	// i = -1;
+	// j = -1;
+	// len->obj = (t_map *)malloc(sizeof(t_map) * len->plr.place_two);
+	// // len->obj = '\0';
+	// while (++i < len->y)
+	// {
+	// 	while (++j < ft_strlen(len->map[i]))
+	// 	{
+	// 		sym = len->map[i][j];
+	// 		if (ft_strrchr("2", sym))
+	// 		{
 
-				ft_parses_map2(i, j, len);
-			}
-		}
-		j = -1;
-	}
+	// 			ft_parses_map2(i, j, len);
+	// 		}
+	// 	}
+	// 	j = -1;
+	// }
 //	printf("%f\n", len->obj.x);
 	return (len->map);
+}
+
+void	ft_parser_r(t_all *len, char *map)
+{
+	char *str;
+
+	len->len_r = 1;
+	len->sum = len->len_r;
+	map++;
+	len->width = ft_atoi(map);
+	str = ft_itoa(len->width);
+	while (*str != '\0')
+	{
+		map++;
+		str++;
+	}
+	map++;
+	len->height = ft_atoi(map);
+	if (len->width < 1 || len->height < 1)
+		return ;// тут ошибку надо написать
+	((len->w_width < len->width) ? len->width = len->w_width
+	: len->width);
+	((len->w_height < len->height) ? len->height = len->w_height
+	: len->height);
+}
+
+void	ft_parser_no(t_all *len, char *map)
+{
+	len->len_no = 1;
+	len->sum = len->sum + len->len_no;
+	map = map + 2;
+	len->textur_no = *ft_split(map, ' ');
+	printf("|%s|\n", len->textur_no);
+	if (!(len->imgno.img = mlx_xpm_file_to_image(len->win.mlx,
+	len->textur_no, &len->imgno.img_w, &len->imgno.img_h)))
+		printf("%s\n", len->imgno.img);//return ;//ошибка какая-то
+	len->imgno.addr = mlx_get_data_addr(len->imgno.img,
+	&len->imgno.bpp, &len->imgno.line_l, &len->imgno.en);
+}
+
+void	ft_parser_so(t_all *len, char *map)
+{
+	len->len_so = 1;
+	len->sum = len->sum + len->len_so;
+	map = map + 2;
+	len->textur_so = *ft_split(map, ' ');
+	if (!(len->imgso.img = mlx_xpm_file_to_image(len->win.mlx,
+	len->textur_so, &len->imgso.img_w, &len->imgso.img_h)))
+		return ;//ошибка какая-то
+	len->imgso.addr = mlx_get_data_addr(len->imgso.img,
+	&len->imgso.bpp, &len->imgso.line_l, &len->imgso.en);
+}
+
+void	ft_parser_we(t_all *len, char *map)
+{
+	if (len->len_we != -1)
+		return ; // ошибка
+	len->len_we = 1;
+	len->sum = len->sum + len->len_we;
+	map = map + 2;
+	len->textur_we = *ft_split(map, ' ');
+	if (!(len->imgwe.img = mlx_xpm_file_to_image(len->win.mlx,
+	len->textur_we, &len->imgwe.img_w, &len->imgwe.img_h)))
+		return ;//ошибка какая-то
+	len->imgwe.addr = mlx_get_data_addr(len->imgwe.img,
+	&len->imgwe.bpp, &len->imgwe.line_l, &len->imgwe.en);
+}
+
+void	ft_parser_ea(t_all *len, char *map)
+{
+	if (len->len_ea != -1)
+		return ;// ошибка
+	len->len_ea = 1;
+	len->sum = len->sum + len->len_ea;
+	map = map + 2;
+	len->textur_ea = *ft_split(map, ' ');
+	if (!(len->imgea.img = mlx_xpm_file_to_image(len->win.mlx,
+	len->textur_ea, &len->imgea.img_w, &len->imgea.img_h)))
+		return ;//ошибка какая-то
+	len->imgea.addr = mlx_get_data_addr(len->imgea.img,
+	&len->imgea.bpp, &len->imgea.line_l, &len->imgea.en);
+}
+
+void	ft_parser_s(t_all *len, char *map)
+{
+	if (len->len_s != -1)
+		return ; // ошибка
+	len->len_s = 1;
+	len->sum = len->sum + len->len_s;
+	map++;
+	len->textur_s = *ft_split(map, ' ');
+	if (!(len->imgs.img = mlx_xpm_file_to_image(len->win.mlx,
+	len->textur_s, &len->imgs.img_w, &len->imgs.img_h)))
+		return ;//ошибка какая-то
+	len->imgs.addr = mlx_get_data_addr(len->imgs.img,
+	&len->imgs.bpp, &len->imgs.line_l, &len->imgs.en);
+}
+
+void	ft_fpars(t_all *len)
+{
+	if (len->colors.fbits_one > 255 ||
+	len->colors.fbits_two > 255 || len->colors.fbits_three > 255)
+		return ;// ошибка
+	if (len->colors.fbits_one < 0 ||
+	len->colors.fbits_two < 0 || len->colors.fbits_three < 0)
+		return ;//ошибка
+}
+
+void	ft_parser_f(t_all *len, char *map)
+{
+	char *str;
+
+	if (len->len_f != -1)
+		return ; //ошибка
+	len->len_f = 1;
+	len->sum = len->sum + len->len_f;
+	map++;
+	len->colors.fbits_one = ft_atoi(map);
+	str = ft_strchr(map, ',');
+	map = str;
+	map++;
+	len->colors.fbits_two = ft_atoi(map);
+	str = ft_strchr(map, ',');
+	map = str;
+	map++;
+	len->colors.fbits_three = ft_atoi(map);
+	str = "";
+	str = ft_strchr(map, ',');
+	if (str != '\0')
+		return ;//ошибка
+	ft_fpars(len);
+	// if (len->colors.fbits_one > 255 ||
+	// len->colors.fbits_two > 255 || len->colors.fbits_three > 255)
+	// 	return ;// ошибка
+	// if (len->colors.fbits_one < 0 ||
+	// len->colors.fbits_two < 0 || len->colors.fbits_three < 0)
+	// 	return ;//ошибка
+	ft_colorf(len);
+}
+
+void	ft_cpars(t_all *len)
+{
+	if (len->colors.cbits_one > 255 ||
+	len->colors.cbits_two > 255 || len->colors.cbits_three > 255)
+		return ;// ошибка
+	if (len->colors.cbits_one < 0 ||
+	len->colors.cbits_two < 0 || len->colors.cbits_three < 0)
+		return ;//ошибка
+}
+
+void	ft_parser_c(t_all *len, char *map)
+{
+	char *str;
+
+	if (len->len_c != -1)
+		return ;//ошибка
+	len->len_c = 1;
+	len->sum = len->sum + len->len_f;
+	map++;
+	len->colors.cbits_one = ft_atoi(map);
+	str = ft_strchr(map, ',');
+	map = str;
+	map++;
+	len->colors.cbits_two = ft_atoi(map);
+	str = ft_strchr(map, ',');
+	map = str;
+	map++;
+	len->colors.cbits_three = ft_atoi(map);
+	str = "";
+	str = ft_strchr(map, ',');
+	if (str != '\0')
+		return ;//ошибка
+	ft_cpars(len);
+	// if (len->colors.cbits_one > 255 ||
+	// len->colors.cbits_two > 255 || len->colors.cbits_three > 255)
+	// 	return ;// ошибка
+	// if (len->colors.cbits_one < 0 ||
+	// len->colors.cbits_two < 0 || len->colors.cbits_three < 0)
+	// 	return ;//ошибка
+	ft_colorc(len);
+}
+
+void	ft_parser_map(t_all *len, char *map)
+{
+	char *str;
+
+	str = NULL;
+	if (*map == ' ')
+	{
+		while (*map != '\0')
+		{
+			if (*map == '1')
+			{
+				len->flag = 1;
+				break ;
+			}
+			map++;
+		}
+	}
+	if (*map == '1')
+		len->flag = 1;
 }
 
 void	ft_parses(char *map, t_all *len)
@@ -290,184 +546,193 @@ void	ft_parses(char *map, t_all *len)
 	// printf("%d", len->len_r);
 	if (*map == 'R' && len->len_r == -1)
 	{
-		len->len_r = 1;
-		len->sum = len->len_r;
-		map++;
-		len->width = ft_atoi(map);
-		str = ft_itoa(len->width);
-		while (*str != '\0')
-		{
-			map++;
-			str++;
-		}
-		map++;
-		len->height = ft_atoi(map);
-		if (len->width < 1 || len->height < 1)
-			return ;// тут ошибку надо написать
-		((len->w_width < len->width) ? len->width = len->w_width
-		: len->width);
-		((len->w_height < len->height) ? len->height = len->w_height
-		: len->height);
+		ft_parser_r(len, map);
+		// len->len_r = 1;
+		// len->sum = len->len_r;
+		// map++;
+		// len->width = ft_atoi(map);
+		// str = ft_itoa(len->width);
+		// while (*str != '\0')
+		// {
+		// 	map++;
+		// 	str++;
+		// }
+		// map++;
+		// len->height = ft_atoi(map);
+		// if (len->width < 1 || len->height < 1)
+		// 	return ;// тут ошибку надо написать
+		// ((len->w_width < len->width) ? len->width = len->w_width
+		// : len->width);
+		// ((len->w_height < len->height) ? len->height = len->w_height
+		// : len->height);
 		//  printf("1!!!!!!!!!!!!\n");
 		//printf("%d____%d", znach.width, znach.height);
 	}
 	else if ((*map == 'N' && *(map + 1) == 'O') && len->len_no == -1)
 	{
-		len->len_no = 1;
-		//len->imgno.mlx = mlx_init();
-		len->sum = len->sum + len->len_no;
-		map = map + 2;
-		len->textur_no = *ft_split(map, ' ');
-		printf("|%s|\n", len->textur_no);
-		if (!(len->imgno.img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_no, &len->imgno.img_w, &len->imgno.img_h)))
-			printf("%s\n", len->imgno.img);//return ;//ошибка какая-то
-		len->imgno.addr = mlx_get_data_addr(len->imgno.img,
-		&len->imgno.bpp, &len->imgno.line_l, &len->imgno.en);
+		ft_parser_no(len, map);
+		// len->len_no = 1;
+		// //len->imgno.mlx = mlx_init();
+		// len->sum = len->sum + len->len_no;
+		// map = map + 2;
+		// len->textur_no = *ft_split(map, ' ');
+		// printf("|%s|\n", len->textur_no);
+		// if (!(len->imgno.img = mlx_xpm_file_to_image(len->win.mlx,
+		// len->textur_no, &len->imgno.img_w, &len->imgno.img_h)))
+		// 	printf("%s\n", len->imgno.img);//return ;//ошибка какая-то
+		// len->imgno.addr = mlx_get_data_addr(len->imgno.img,
+		// &len->imgno.bpp, &len->imgno.line_l, &len->imgno.en);
 
 	}
 	else if ((*map == 'S' && *(map + 1) == 'O') && len->len_so == -1)
 	{
-		len->len_so = 1;
-		len->sum = len->sum + len->len_so;
-		map = map + 2;
-		len->textur_so = *ft_split(map, ' ');
-		if (!(len->imgso.img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_so, &len->imgso.img_w, &len->imgso.img_h)))
-			return ;//ошибка какая-то
-		len->imgso.addr = mlx_get_data_addr(len->imgso.img,
-		&len->imgso.bpp, &len->imgso.line_l, &len->imgso.en);
-		//printf("3!!!!!!!!!!!!\n");
+		ft_parser_so(len, map);
+		// len->len_so = 1;
+		// len->sum = len->sum + len->len_so;
+		// map = map + 2;
+		// len->textur_so = *ft_split(map, ' ');
+		// if (!(len->imgso.img = mlx_xpm_file_to_image(len->win.mlx,
+		// len->textur_so, &len->imgso.img_w, &len->imgso.img_h)))
+		// 	return ;//ошибка какая-то
+		// len->imgso.addr = mlx_get_data_addr(len->imgso.img,
+		// &len->imgso.bpp, &len->imgso.line_l, &len->imgso.en);
+		// //printf("3!!!!!!!!!!!!\n");
 	}
 	else if (*map == 'W' && *(map + 1) == 'E')
 	{
-		if (len->len_we != -1)
-			return ; // ошибка
-		len->len_we = 1;
-		len->sum = len->sum + len->len_we;
-		map = map + 2;
-		len->textur_we = *ft_split(map, ' ');
-		if (!(len->imgwe.img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_we, &len->imgwe.img_w, &len->imgwe.img_h)))
-			return ;//ошибка какая-то
-		len->imgwe.addr = mlx_get_data_addr(len->imgwe.img,
-		&len->imgwe.bpp, &len->imgwe.line_l, &len->imgwe.en);
-		//printf("4!!!!!!!!!!!!\n");
+		ft_parser_we(len, map);
+		// if (len->len_we != -1)
+		// 	return ; // ошибка
+		// len->len_we = 1;
+		// len->sum = len->sum + len->len_we;
+		// map = map + 2;
+		// len->textur_we = *ft_split(map, ' ');
+		// if (!(len->imgwe.img = mlx_xpm_file_to_image(len->win.mlx,
+		// len->textur_we, &len->imgwe.img_w, &len->imgwe.img_h)))
+		// 	return ;//ошибка какая-то
+		// len->imgwe.addr = mlx_get_data_addr(len->imgwe.img,
+		// &len->imgwe.bpp, &len->imgwe.line_l, &len->imgwe.en);
+		// //printf("4!!!!!!!!!!!!\n");
 	}
 	else if (*map == 'E' && *(map + 1) == 'A')
 	{
-		if (len->len_ea != -1)
-			return ;// ошибка
-		len->len_ea = 1;
-		len->sum = len->sum + len->len_ea;
-		map = map + 2;
-		len->textur_ea = *ft_split(map, ' ');
-		if (!(len->imgea.img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_ea, &len->imgea.img_w, &len->imgea.img_h)))
-			return ;//ошибка какая-то
-		len->imgea.addr = mlx_get_data_addr(len->imgea.img,
-		&len->imgea.bpp, &len->imgea.line_l, &len->imgea.en);
+		ft_parser_ea(len, map);
+		// if (len->len_ea != -1)
+		// 	return ;// ошибка
+		// len->len_ea = 1;
+		// len->sum = len->sum + len->len_ea;
+		// map = map + 2;
+		// len->textur_ea = *ft_split(map, ' ');
+		// if (!(len->imgea.img = mlx_xpm_file_to_image(len->win.mlx,
+		// len->textur_ea, &len->imgea.img_w, &len->imgea.img_h)))
+		// 	return ;//ошибка какая-то
+		// len->imgea.addr = mlx_get_data_addr(len->imgea.img,
+		// &len->imgea.bpp, &len->imgea.line_l, &len->imgea.en);
 		//printf("5!!!!!!!!!!!!\n");
 	}
 	else if (*map == 'S')
 	{
-		if (len->len_s != -1)
-			return ; // ошибка
-		len->len_s = 1;
-		len->sum = len->sum + len->len_s;
-		map++;
-		len->textur_s = *ft_split(map, ' ');
-		if (!(len->imgs.img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_s, &len->imgs.img_w, &len->imgs.img_h)))
-			return ;//ошибка какая-то
-		len->imgs.addr = mlx_get_data_addr(len->imgs.img,
-		&len->imgs.bpp, &len->imgs.line_l, &len->imgs.en);
-		//printf("6!!!!!!!!!!!!\n");
+		ft_parser_s(len, map);
+		// if (len->len_s != -1)
+		// 	return ; // ошибка
+		// len->len_s = 1;
+		// len->sum = len->sum + len->len_s;
+		// map++;
+		// len->textur_s = *ft_split(map, ' ');
+		// if (!(len->imgs.img = mlx_xpm_file_to_image(len->win.mlx,
+		// len->textur_s, &len->imgs.img_w, &len->imgs.img_h)))
+		// 	return ;//ошибка какая-то
+		// len->imgs.addr = mlx_get_data_addr(len->imgs.img,
+		// &len->imgs.bpp, &len->imgs.line_l, &len->imgs.en);
+		// //printf("6!!!!!!!!!!!!\n");
 	}
 	else if (*map == 'F')
 	{
-		if (len->len_f != -1)
-			return ; //ошибка
-		len->len_f = 1;
-		len->sum = len->sum + len->len_f;
-		map++;
-		len->colors.fbits_one = ft_atoi(map);
-		str = ft_strchr(map, ',');
-		map = str;
-		//printf("1@@@%s\n", map);
-		map++;
-		len->colors.fbits_two = ft_atoi(map);
-		str = ft_strchr(map, ',');
-		map = str;
-		//printf("1@@@%s\n", map);
-		map++;
-		len->colors.fbits_three = ft_atoi(map);
-		str = "";
-		str = ft_strchr(map, ',');
-		if (str != '\0')
-			return ;//ошибка
-		if (len->colors.fbits_one > 255 ||
-		len->colors.fbits_two > 255 || len->colors.fbits_three > 255)
-			return ;// ошибка
-		if (len->colors.fbits_one < 0 ||
-		len->colors.fbits_two < 0 || len->colors.fbits_three < 0)
-			return ;//ошибка
-		ft_colorf(len);
-	// 	printf("7!!!!!!!!!!!!\n");
-	// 	printf("%d\n", f_colors.fbits_one);
-	// 	printf("%d\n", f_colors.fbits_two);
-	// 	printf("%d\n", f_colors.fbits_three);
+		ft_parser_f(len, map);
+	// 	if (len->len_f != -1)
+	// 		return ; //ошибка
+	// 	len->len_f = 1;
+	// 	len->sum = len->sum + len->len_f;
+	// 	map++;
+	// 	len->colors.fbits_one = ft_atoi(map);
+	// 	str = ft_strchr(map, ',');
+	// 	map = str;
+	// 	//printf("1@@@%s\n", map);
+	// 	map++;
+	// 	len->colors.fbits_two = ft_atoi(map);
+	// 	str = ft_strchr(map, ',');
+	// 	map = str;
+	// 	//printf("1@@@%s\n", map);
+	// 	map++;
+	// 	len->colors.fbits_three = ft_atoi(map);
+	// 	str = "";
+	// 	str = ft_strchr(map, ',');
+	// 	if (str != '\0')
+	// 		return ;//ошибка
+	// 	if (len->colors.fbits_one > 255 ||
+	// 	len->colors.fbits_two > 255 || len->colors.fbits_three > 255)
+	// 		return ;// ошибка
+	// 	if (len->colors.fbits_one < 0 ||
+	// 	len->colors.fbits_two < 0 || len->colors.fbits_three < 0)
+	// 		return ;//ошибка
+	// 	ft_colorf(len);
+	// // 	printf("7!!!!!!!!!!!!\n");
+	// // 	printf("%d\n", f_colors.fbits_one);
+	// // 	printf("%d\n", f_colors.fbits_two);
+	// // 	printf("%d\n", f_colors.fbits_three);
 	}
 	else if (*map == 'C')
 	{
-		if (len->len_c != -1)
-			return ;//ошибка
-		len->len_c = 1;
-		len->sum = len->sum + len->len_f;
-		map++;
-		len->colors.cbits_one = ft_atoi(map);
-		str = ft_strchr(map, ',');
-		map = str;
-		//printf("1@@@%s\n", map);
-		map++;
-		len->colors.cbits_two = ft_atoi(map);
-		str = ft_strchr(map, ',');
-		map = str;
-		//printf("1@@@%s\n", map);
-		map++;
-		len->colors.cbits_three = ft_atoi(map);
-		str = "";
-		str = ft_strchr(map, ',');
-		if (str != '\0')
-			return ;//ошибка
-		if (len->colors.cbits_one > 255 ||
-		len->colors.cbits_two > 255 || len->colors.cbits_three > 255)
-			return ;// ошибка
-		if (len->colors.cbits_one < 0 ||
-		len->colors.cbits_two < 0 || len->colors.cbits_three < 0)
-			return ;//ошибка
-		ft_colorc(len);
+		ft_parser_c(len, map);
+		// if (len->len_c != -1)
+		// 	return ;//ошибка
+		// len->len_c = 1;
+		// len->sum = len->sum + len->len_f;
+		// map++;
+		// len->colors.cbits_one = ft_atoi(map);
+		// str = ft_strchr(map, ',');
+		// map = str;
+		// //printf("1@@@%s\n", map);
+		// map++;
+		// len->colors.cbits_two = ft_atoi(map);
+		// str = ft_strchr(map, ',');
+		// map = str;
+		// //printf("1@@@%s\n", map);
+		// map++;
+		// len->colors.cbits_three = ft_atoi(map);
+		// str = "";
+		// str = ft_strchr(map, ',');
+		// if (str != '\0')
+		// 	return ;//ошибка
+		// if (len->colors.cbits_one > 255 ||
+		// len->colors.cbits_two > 255 || len->colors.cbits_three > 255)
+		// 	return ;// ошибка
+		// if (len->colors.cbits_one < 0 ||
+		// len->colors.cbits_two < 0 || len->colors.cbits_three < 0)
+		// 	return ;//ошибка
+		// ft_colorc(len);
 	}
 
 	else if (len->sum == 8 /*&& (*map == '1' || *map == ' ')*/)
 	{
-		str = NULL;
-		if (*map == ' ')
-		{
-			while (*map != '\0')
-			{
-				if (*map == '1')
-				{
-					len->flag = 1;
-					break ;
-				}
-				map++;
-			}
-		}
-		if (*map == '1')
-		{
-			len->flag = 1;
-		}
+		ft_parser_map(len, map);
+		// str = NULL;
+		// if (*map == ' ')
+		// {
+		// 	while (*map != '\0')
+		// 	{
+		// 		if (*map == '1')
+		// 		{
+		// 			len->flag = 1;
+		// 			break ;
+		// 		}
+		// 		map++;
+		// 	}
+		// }
+		// if (*map == '1')
+		// {
+		// 	len->flag = 1;
+		// }
 	}
 
 	//printf("%d\n", len->flag);
@@ -595,7 +860,7 @@ void	wall_3d(t_all *all, float h, float i, float x_w, float y_h)
 	}
 	while(k < all->count)
 	{
-		draw_sprite1(all, all->obj[k].dx, all->obj[k].dy);
+		draw_sprite1(all, all->obj[k].x, all->obj[k].y);
 		k++;
 	}
 }
@@ -830,8 +1095,8 @@ void	draw_map(t_all *map)
 	j = -1;
 	x = -1;
 	map->win.mlx = mlx_init();
-	map->win.win = mlx_new_window(map->win.mlx, 1920, 1080, "cub3D");
-	map->win.img = mlx_new_image(map->win.mlx, 1920, 1080);
+	map->win.win = mlx_new_window(map->win.mlx, map->width, map->height, "cub3D");
+	map->win.img = mlx_new_image(map->win.mlx, map->width, map->height);
 	map->win.addr = mlx_get_data_addr(map->win.img,
 	&map->win.bpp, &map->win.line_l, &map->win.en);
 
@@ -871,29 +1136,41 @@ void	draw_map(t_all *map)
 	mlx_loop(map->win.mlx);
 }
 
+void		ft_col(int max, t_all *len, t_list *head, char *line)
+{
+	while (get_next_line(len->fd, &line))
+	{
+		if (ft_strlen(line) > max)
+			max = ft_strlen(line);
+		ft_lstadd_back(&head, ft_lstnew(line));
+	}
+}
+
+void	ft_param(t_all *len)
+{
+	len->flag = 0;
+	len->len_r = -1;
+	len->len_we = -1;
+	len->len_no = -1;
+	len->len_ea = -1;
+	len->len_s = -1;
+	len->len_so = -1;
+	len->len_c = -1;
+	len->len_f = -1;
+}
+
 int		main(int argc, char **argv)
 {
-	//t_win	m_mlx;
+	t_list *head;
 	t_all	len;
-	// t_plr plr;
 	int max;
-	int i = 0;
+	char *line;
 
 	len.win.mlx = mlx_init();
-	max = 0;
-	len.flag = 0;
-	len.len_r = -1;
-	len.len_we = -1;
-	len.len_no = -1;
-	len.len_ea = -1;
-	len.len_s = -1;
-	len.len_so = -1;
-	len.len_c = -1;
-	len.len_f = -1;
+	ft_param(&len);
 	len.fd = open(argv[1], O_RDONLY);
-	char	*line = NULL;
-	t_list	*head = NULL;
-
+	line = NULL;
+	head = NULL;
 	while (get_next_line(len.fd, &line))
 	{
 		len.str_first = line;
@@ -906,15 +1183,13 @@ int		main(int argc, char **argv)
 	if (ft_strlen(len.str_first) > max)
 		max = ft_strlen(len.str_first);
 	ft_lstadd_front(&head, ft_lstnew(len.str_first));
-	while (get_next_line(len.fd, &line))
-	{
-		if (ft_strlen(line) > max)
-			max = ft_strlen(line);
-		ft_lstadd_back(&head, ft_lstnew(line));
-	}
+	ft_col(max, &len, head, line);
+	// while (get_next_line(len.fd, &line))
+	// {
+	// 	if (ft_strlen(line) > max)
+	// 		max = ft_strlen(line);
+	// 	ft_lstadd_back(&head, ft_lstnew(line));
+	// }
 	make_map(&head, ft_lstsize(head), &len, max);
-	//printf("%f, %f\n", len.obj->x, len.obj->y);
-	//printf("%f", len.plr.y);
 	draw_map(&len);
-	//mlx_loop(len.win.mlx);
 }

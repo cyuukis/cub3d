@@ -6,6 +6,8 @@
 		"locale": "c",
 		"__threading_support": "c",
 		"atomic": "c",
-		"mutex": "c"
+		"mutex": "c",
+		"unordered_map": "c",
+		"utility": "c"
 	}
 }
