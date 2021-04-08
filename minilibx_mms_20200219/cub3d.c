@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/06 22:27:59 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/08 21:58:27 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,18 +88,69 @@ int		my_pix_get(t_win *data, int x, int y)
 	return *(unsigned int*)dst;
 }
 
-void draw_sprite1(t_all *all, float x, float y)
+void	ft_swap(t_all *all, int i, int j)
+{
+	float x;
+	float y;
+
+	printf("1X%f, 1Y%f\n", all->obj[i].x, all->obj[i].y);
+	printf("2X%f, 2Y%f\n", all->obj[j].x, all->obj[j].y);
+	x = all->obj[i].x;
+	y = all->obj[i].y;
+	all->obj[i].x = all->obj[j].x;
+	all->obj[i].y = all->obj[j].y;
+	all->obj[j].x = x;
+	all->obj[j].y = y;
+	//printf("1X:%f, 1Y:%f\n", all->obj[i].x, all->obj[i].y);
+	//printf("2X:%f, 2Y:%f\n", all->obj[j].x, all->obj[j].y);
+}
+
+
+void	ft_sortingspr(int count, t_all *all, int k)
+{
+	int i;
+	int j;
+	int max;
+	int flag;
+
+	j = 1;
+	i = 0;
+
+	while (i < count)
+	{
+		max = all->obj[i].distance;
+		flag = 0;
+		while (j < count)
+		{
+			if (all->obj[j].distance > max)
+			{
+				flag = 1;
+				max = all->obj[j].distance;
+			}
+			j++;
+		}
+		if (flag != 0)
+		{
+
+			ft_swap(all, i, flag);
+			break ;
+		}
+		i++;
+	}
+}
+
+void draw_sprite1(t_all *all, float x, float y, float dist)
 {
 	// float dx;
 	// float dy;
-	float distance;
+	//float distance;
 	float teta;
 	float gamma;
 	int scr_size;
 	int i = 0;
 	int j = 0;
-	float jy = 0;
-
+	int jy = 0;
+	int ix = 0;
 	//printf("@%f, %f\n", dx, dy);
 	teta = atan2(y - all->plr.y, x - all->plr.x);
 	while (teta - all->plr.angel > M_PI)
@@ -108,36 +159,28 @@ void draw_sprite1(t_all *all, float x, float y)
 		teta += 2 * M_PI;
 	if (teta - all->plr.angel < -M_PI_2 || teta - all->plr.angel > M_PI_2)
 		return ;
-	distance = sqrt(pow(all->plr.x - x, 2) + pow(all->plr.y - y, 2));
-	scr_size = all->height / distance;
+
+	//distance = sqrt(pow(all->plr.x - x, 2) + pow(all->plr.y - y, 2));
+	scr_size = all->height / dist;
+	//ft_sortingspr(all->count, distance, all);
 	all->coordin.proj_height = all->height / 2 - scr_size / 2;
-	all->coordin.proj_we = -cos(teta - all->plr.angel + M_PI_2) * all->width + all->width / 2 - scr_size / 2;
-	//all->coordin.proj_we = (teta - all->plr.angel + M_PI_2) / all->fov * (all->width / 2) + (all->width / 2) / 2 - all->imgs.img_w / 2;
-	float ix = all->coordin.proj_we;
-
-	// printf("%d\n", scr_size);
-	// printf("%f\n", distance);
-	// printf("%f\n", teta);
-	// printf("%d\n", all->coordin.proj_height);
-	// printf("%d\n", all->coordin.proj_we);
-//	printf("%f, %f\n", y, x);
-
+	all->coordin.proj_we = -cos(teta - all->plr.angel + M_PI_2) * all->width + all->width / 1.4 - scr_size / 2;
+	ix = all->coordin.proj_we;
 	while (ix < scr_size + all->coordin.proj_we)
 	{
 		if (ix < all->width && ix > 0)
 		{
-			//printf("^^^^^");
+			i = (ix - (int)all->coordin.proj_we) / ((float)scr_size / all->imgs.img_w);
 			jy = all->coordin.proj_height;
 			while (jy < scr_size + all->coordin.proj_height)
 			{
-				i = 0;
-				j = 0;
+
 				if (jy < all->height && jy > 0)
 				{
-					i = ((int)ix - all->coordin.proj_we) / ((float)scr_size / all->imgs.img_w);
-					j = ((int)jy - all->coordin.proj_height) / ((float)scr_size / all->imgs.img_h);
+					j = (jy - (int)all->coordin.proj_height) / ((float)scr_size / all->imgs.img_h);
 					int color = my_pix_get(&all->imgs, i, j);
-					my_mlx_pixel_put(&all->win, ix, jy, color);
+					if (color != 0)
+						my_mlx_pixel_put(&all->win, ix, jy, color);
 				}
 				jy++;
 			}
@@ -858,12 +901,10 @@ void	wall_3d(t_all *all, float h, float i, float x_w, float y_h)
 		my_mlx_pixel_put(&all->win, i, y, all->colors.cbits_color);
 		y++;
 	}
-	while(k < all->count)
-	{
-		draw_sprite1(all, all->obj[k].x, all->obj[k].y);
-		k++;
-	}
+
 }
+
+
 
 void		plr_luch(t_all *all, float x_p, float y_p)
 {
@@ -915,6 +956,16 @@ void		plr_luch(t_all *all, float x_p, float y_p)
 		if (c > 0)
 			a = all->height / (c * cos(all->plr.angel - all->plr.direction));
 		wall_3d(all, a, i, x, y);
+	}
+	int k = 0;
+	int g = 0;
+	while(++k < all->count)
+	{
+		while(++g < all->count)
+			all->obj[g].distance = sqrt(pow(all->plr.x - all->obj[g].x, 2) + pow(all->plr.y - all->obj[g].y, 2));
+		printf("()%d\n", all->count);
+		ft_sortingspr(all->count, all, k);
+		draw_sprite1(all, all->obj[k].x, all->obj[k].y, all->obj[k].distance);
 	}
 	//printf("%f", a);
 	//return (c);

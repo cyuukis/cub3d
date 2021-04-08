@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/03/31 19:54:28 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/08 20:00:10 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ typedef struct	s_map
 	float	x;
 	float	y;
 	//float	dir;
-	float	dx;
-	float	dy;
+	float distance;
 }				t_map;
 
 typedef struct	s_plr //структура для игрока и луча
@@ -65,8 +64,8 @@ typedef struct	s_colors {
 
 typedef struct s_coordin
 {
-	int proj_height;
-	int proj_we;
+	float proj_height;
+	float proj_we;
 }	t_coordin;
 
 typedef struct	s_all // структура для всего вместе
