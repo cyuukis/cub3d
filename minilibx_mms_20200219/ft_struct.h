@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/08 20:00:10 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/10 19:33:08 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct	s_plr //структура для игрока и луча
 	float		end;
 	int			flag;
 	int			place_two;
+	float		*c;
 }				t_plr;
 
 typedef struct	s_colors {
