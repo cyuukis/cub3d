@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/10 21:55:45 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/13 19:36:59 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,83 +135,43 @@ void	ft_sortingspr(int count, t_all *all)
 
 void draw_sprite1(t_all *all, float x, float y, float dist)
 {
-	// float dx;
-	// float dy;
-	//float distance;
 	float teta;
 	// float gamma;
-	float scr_size;
-	float i = 0;
-	float j = 0;
-	float jy = 0;
-	float ix = 0;
-	// //printf("@%f, %f\n", dx, dy);
-	// teta = atan2(y - all->plr.y, x - all->plr.x);
-	// while (teta - all->plr.angel > M_PI)
-	// 	teta -= 2 * M_PI;
-	// while (teta - all->plr.angel < -M_PI)
-	// 	teta += 2 * M_PI;
-	// if (teta - all->plr.angel < -M_PI_2 || teta - all->plr.angel > M_PI_2)
-	// 	return ;
+	int scr_size;
+	float i;
+	float j;
 
-	// //distance = sqrt(pow(all->plr.x - x, 2) + pow(all->plr.y - y, 2));
-	// scr_size = all->height / dist;
-	// //ft_sortingspr(all->count, distance, all);
-	// all->coordin.proj_height = all->height / 2 - scr_size / 2;
-	// all->coordin.proj_we = -cos(teta - all->plr.angel + M_PI_2) * all->width + all->width / 2 - scr_size / 2;
-	// ix = all->coordin.proj_we;
-	// while (ix < scr_size + all->coordin.proj_we)
-	// {
-	// 	if (ix < all->width && ix >= 0 && (int)dist < all->plr.c[ix])
-	// 	{
-	// 		i = (ix - all->coordin.proj_we) / ((float)scr_size / all->imgs.img_w);
-	// 		jy = all->coordin.proj_height;
-	// 		while (jy < scr_size + all->coordin.proj_height)
-	// 		{
-	// 			if (jy < all->height && jy >= 0)
-	// 			{
-	// 				j = (jy - all->coordin.proj_height) / ((float)scr_size / all->imgs.img_h);
-	// 				int color = my_pix_get(&all->imgs, i, j);
-	// 				if (color != 0)
-	// 					my_mlx_pixel_put(&all->win, ix, jy, color);
-	// 			}
-	// 			jy++;
-	// 		}
-	// 	}
-	// 	ix++;
-	// }
 	teta = atan2(y - all->plr.y, x - all->plr.x);
-	while (teta - all->plr.angel > M_PI)
+	while (teta - all->plr.direction > M_PI)
 		teta -= 2 * M_PI;
-    while (teta - all->plr.angel < -M_PI)
-        teta += 2 * M_PI;
-    if (teta - all->plr.angel < -M_PI_2 || teta - all->plr.angel > M_PI_2)
-        return ;
-    //cub->map.spr_dst = sqrt(cub->map.sprites[i].dst);
-    scr_size = (int)(all->height / dist);
-    all->coordin.proj_we = -cos(teta - all->plr.angel + M_PI_2) * all->width + all->width / 2 - scr_size / 2;
-    all->coordin.proj_height = all->height / 2 - scr_size / 2;
-	ix = all->coordin.proj_we;
-    while (ix < scr_size + all->coordin.proj_we)
-    {
-        if (ix >= 0 && ix < all->width && all->plr.c[(int)ix] >= dist)
-        {
-			i = (ix - all->coordin.proj_we) / ((float)scr_size / all->imgs.img_w);
-            jy = all->coordin.proj_height;
-            while (jy < scr_size + all->coordin.proj_height)
-            {
-                if (jy >= 0 && jy < all->height)
-                {
-                    j = (jy - all->coordin.proj_height) / ((float)scr_size / all->imgs.img_h);
-					int color = my_pix_get(&all->imgs, i, j);
-					if (color != 0)
-						my_mlx_pixel_put(&all->win, ix, jy, color);
-                }
-                jy++;
-            }
-        }
-        ix++;
-    }
+	while (teta - all->plr.direction < -M_PI)
+		teta += 2 * M_PI;
+	if (2 * (teta - all->plr.direction) < -M_PI_2 || 2 * (teta - all->plr.direction) > M_PI_2)
+		return ;
+	scr_size = (int)(all->height / dist);
+		all->coordin.proj_we = -cos(2 * (teta - all->plr.direction) + M_PI_2) * all->width + all->width / 2 - scr_size / 2;
+	all->coordin.proj_height = all->height / 2 - scr_size / 2;
+	all->coordin.ix = all->coordin.proj_we;
+	while (all->coordin.ix < scr_size + all->coordin.proj_we)
+	{
+		if (all->coordin.ix >= 0 && all->coordin.ix < all->width && all->plr.c[(int)all->coordin.ix] >= dist)
+		{
+			i = (all->coordin.ix - all->coordin.proj_we) / ((float)scr_size / all->imgs.img_w);
+			all->coordin.jy = all->coordin.proj_height;
+			while (all->coordin.jy < scr_size + all->coordin.proj_height)
+			{
+				if (all->coordin.jy >= 0 && all->coordin.jy < all->height)
+				{
+					j = (all->coordin.jy - all->coordin.proj_height) / ((float)scr_size / all->imgs.img_h);
+					all->coordin.color = my_pix_get(&all->imgs, i, j);
+					if (all->coordin.color != 0)
+						my_mlx_pixel_put(&all->win, all->coordin.ix, all->coordin.jy, all->coordin.color);
+			}
+			all->coordin.jy++;
+			}
+		}
+		all->coordin.ix++;
+	}
 }
 
 void	ft_parses_map2(int y, int x, t_all *all)
@@ -983,15 +943,24 @@ void		plr_luch(t_all *all, float x_p, float y_p)
 		wall_3d(all, a, i, x, y);
 			i++;
 	}
-	int k = -1;
+	int k = 0;
 	int g = 0;
+	if(all->count > 1)
+	{
 	while(++g < all->count)
 		all->obj[g].distance = sqrt(pow(all->plr.x - all->obj[g].x, 2) + pow(all->plr.y - all->obj[g].y, 2));
 	ft_sortingspr(all->count, all);
 	while(++k < all->count)
 	{
-		//printf("()%d\n", all->count);
-		printf("dist %f\n", all->obj[k].distance);
+//		a = all->height / (all->plr.c[i] * cos(all->plr.angel - all->plr.direction));
+
+		draw_sprite1(all, all->obj[k].x, all->obj[k].y, all->obj[k].distance);
+	}
+	}
+	else
+	{
+		all->obj[k].distance = sqrt(pow(all->plr.x - all->obj[k].x, 2) + pow(all->plr.y - all->obj[k].y, 2));
+		ft_sortingspr(all->count, all);
 		draw_sprite1(all, all->obj[k].x, all->obj[k].y, all->obj[k].distance);
 	}
 	//printf("%f", a);
@@ -1000,7 +969,7 @@ void		plr_luch(t_all *all, float x_p, float y_p)
 
 int		key(int keycode, t_all *all)
 {
-	printf("%f, %f\n", all->plr.y, all->plr.x);
+	printf("%f, %f\n", all->plr.x, all->plr.y);
 	int j;
 	int i;
 	float c;
@@ -1270,4 +1239,5 @@ int		main(int argc, char **argv)
 	// }
 	make_map(&head, ft_lstsize(head), &len, max);
 	draw_map(&len);
+
 }

@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/10 19:33:08 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/13 18:25:32 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ typedef struct	s_map
 {
 	float	x;
 	float	y;
-	//float	dir;
 	float distance;
 }				t_map;
 
@@ -65,8 +64,11 @@ typedef struct	s_colors {
 
 typedef struct s_coordin
 {
-	float proj_height;
-	float proj_we;
+	int proj_height;
+	int proj_we;
+	int ix;
+	int jy;
+	int color;
 }	t_coordin;
 
 typedef struct	s_all // структура для всего вместе
