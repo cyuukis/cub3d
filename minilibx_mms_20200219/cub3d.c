@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/13 19:36:59 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/19 20:02:18 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1147,37 +1147,38 @@ void	draw_map(t_all *map)
 	map->win.addr = mlx_get_data_addr(map->win.img,
 	&map->win.bpp, &map->win.line_l, &map->win.en);
 
-	while (++x < (map->y + 1) * 1)
-	{
-		while (++j < ft_strlen(map->map[x / 1]) * 1)
-		{
-			if (map->map[x / 1][j / 1] == '1')
-			{
-				my_mlx_pixel_put(&map->win, j, x, 0x00FF0000);
-			}
-			if (map->map[x / 1][j / 1] == 'N')
-			{
-				my_mlx_pixel_put(&map->win, j, x, 0x000FF00);
-			}
-			else if (map->map[x / 1][j / 1] == 'S')
-			{
-				my_mlx_pixel_put(&map->win, j, x, 0x000FF00);
-			}
-			if (map->map[x / 1][j / 1] == 'W')
-			{
-				my_mlx_pixel_put(&map->win, j, x, 0x000FF00);
-			}
-			if (map->map[x / 1][j / 1] == 'E')
-			{
-				my_mlx_pixel_put(&map->win, j, x, 0x000FF00);
-			}
-			if (map->map[x / 1][j / 1] == '2')
-			{
-				my_mlx_pixel_put(&map->win, j, x, 0xCC0000);
-			}
-		}
-		j = -1;
-	}
+	// while (++x < (map->y + 1) * 1)
+	// {
+	// 	while (++j < ft_strlen(map->map[x / 1]) * 1)
+	// 	{
+	// 		if (map->map[x / 1][j / 1] == '1')
+	// 		{
+	// 			my_mlx_pixel_put(&map->win, j, x, 0x00FF0000);
+	// 		}
+	// 		if (map->map[x / 1][j / 1] == 'N')
+	// 		{
+	// 			my_mlx_pixel_put(&map->win, j, x, 0x000FF00);
+	// 		}
+	// 		else if (map->map[x / 1][j / 1] == 'S')
+	// 		{
+	// 			my_mlx_pixel_put(&map->win, j, x, 0x000FF00);
+	// 		}
+	// 		if (map->map[x / 1][j / 1] == 'W')
+	// 		{
+	// 			my_mlx_pixel_put(&map->win, j, x, 0x000FF00);
+	// 		}
+	// 		if (map->map[x / 1][j / 1] == 'E')
+	// 		{
+	// 			my_mlx_pixel_put(&map->win, j, x, 0x000FF00);
+	// 		}
+	// 		if (map->map[x / 1][j / 1] == '2')
+	// 		{
+	// 			my_mlx_pixel_put(&map->win, j, x, 0xCC0000);
+	// 		}
+	// 	}
+	// 	j = -1;
+	// }
+	plr_luch(map, map->plr.x, map->plr.y);
 	mlx_hook(map->win.win, 2, 1L << 0, key, map);
 	mlx_put_image_to_window(map->win.mlx, map->win.win, map->win.img, 0, 0);
 	mlx_loop(map->win.mlx);
@@ -1204,6 +1205,26 @@ void	ft_param(t_all *len)
 	len->len_so = -1;
 	len->len_c = -1;
 	len->len_f = -1;
+}
+
+void	drawbmp(t_all *all,int width,int height, t_drwbmp *bmp)
+{
+	bmp->file_ps = (4 - (all->width * 3) % 4) % 4;
+	bmp->size_d = all->width * all->height * 3 + all->height * bmp->file_ps;
+	bmp->file = ft_calloc(14,1);
+	bmp->file[0] = 'B';
+	bmp->file[1] = 'M';
+	
+}
+
+void	new_bmp(t_all *all)
+{
+	t_drwbmp bmp;
+
+	bmp.open = open("screen_cub.bmp", O_CREAT | O_WRONLY | O_TRUNC,
+		S_IREAD | S_IWRITE);
+	plr_luch(all, all->plr.x, all->plr.y);
+	drawbmp(all, all->width, all->height, &bmp);
 }
 
 int		main(int argc, char **argv)
@@ -1238,6 +1259,10 @@ int		main(int argc, char **argv)
 	// 	ft_lstadd_back(&head, ft_lstnew(line));
 	// }
 	make_map(&head, ft_lstsize(head), &len, max);
-	draw_map(&len);
 
+	draw_map(&len);
+if (argc == 3)
+	{
+		new_bmp(&len);
+	}
 }

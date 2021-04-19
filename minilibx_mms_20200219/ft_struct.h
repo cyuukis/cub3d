@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/13 18:25:32 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/19 19:56:31 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,14 @@ typedef struct s_coordin
 	int jy;
 	int color;
 }	t_coordin;
+
+typedef struct s_drwbmp
+{
+	unsigned char *file;
+	int open;
+	int file_ps;
+	int size_d;
+} t_drwbmp;
 
 typedef struct	s_all // структура для всего вместе
 {
