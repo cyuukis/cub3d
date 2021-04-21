@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/21 00:14:08 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/21 21:25:32 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,11 +203,6 @@ void	ft_parses_map(int i, int j, char sym, t_all *len)
 		len->plr.y = i + 0.5;
 		len->plr.flag = len->plr.flag + 1;
 	}
-	if (len->plr.flag == 1)
-	{
-		printf("error");
-		return ;
-	}
 	if (sym == '2')
 	{
 		len->plr.place_two++;
@@ -282,9 +277,17 @@ void	make_map2(t_all *len)
 			if (ft_strrchr(OBJJ, sym))
 				(((len->map[i - 1][j] != ' ') && (len->map[i + 1][j] != ' ')
 				&& (len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' '))
-				? ft_parses_map(i, j, len->map[i][j], len) : printf("error"));
+				? ft_parses_map(i, j, len->map[i][j], len) : printf("Error"));
+			// if (ft_strrchr("1", sym))
+			// 	(((len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' '))
+			// 	? ft_parses_map(i, j, len->map[i][j], len) : printf("Error"));
 		}
 		j = -1;
+	}
+	if (len->plr.flag != 0)
+	{
+		printf("error\n");
+		exit(1);
 	}
 	make_map3(len);
 }
@@ -573,11 +576,11 @@ void	ft_parses(char *map, t_all *len)
 	mlx_get_screen_size(len->win.mlx, &len->w_width, &len->w_height);
 	// printf("%c\n", *map);
 	// printf("%d", len->len_r);
-	if (*map == 'R' && len->len_r == -1)
+	if (*map == 'R')
 	{
 		//ft_parser_r(len, map);
 		len->len_r = 1;
-		len->sum = len->len_r;
+		len->sum = len->sum + len->len_r;
 		map++;
 		len->width = ft_atoi(map);
 		str = ft_itoa(len->width);
@@ -597,7 +600,7 @@ void	ft_parses(char *map, t_all *len)
 		//  printf("1!!!!!!!!!!!!\n");
 		//printf("%d____%d", znach.width, znach.height);
 	}
-	else if ((*map == 'N' && *(map + 1) == 'O') && len->len_no == -1)
+	else if ((*map == 'N' && *(map + 1) == 'O'))
 	{
 		//ft_parser_no(len, map);
 		len->len_no = 1;
@@ -605,7 +608,7 @@ void	ft_parses(char *map, t_all *len)
 		len->sum = len->sum + len->len_no;
 		map = map + 2;
 		len->textur_no = *ft_split(map, ' ');
-		printf("|%s|\n", len->textur_no);
+		//printf("|%s|\n", len->textur_no);
 		if (!(len->imgno.img = mlx_xpm_file_to_image(len->win.mlx,
 		len->textur_no, &len->imgno.img_w, &len->imgno.img_h)))
 			printf("%s\n", len->imgno.img);//return ;//ошибка какая-то
@@ -613,7 +616,7 @@ void	ft_parses(char *map, t_all *len)
 		&len->imgno.bpp, &len->imgno.line_l, &len->imgno.en);
 
 	}
-	else if ((*map == 'S' && *(map + 1) == 'O') && len->len_so == -1)
+	else if ((*map == 'S' && *(map + 1) == 'O'))
 	{
 		//ft_parser_so(len, map);
 		len->len_so = 1;
@@ -630,8 +633,6 @@ void	ft_parses(char *map, t_all *len)
 	else if (*map == 'W' && *(map + 1) == 'E')
 	{
 		//ft_parser_we(len, map);
-		if (len->len_we != -1)
-			return ; // ошибка
 		len->len_we = 1;
 		len->sum = len->sum + len->len_we;
 		map = map + 2;
@@ -646,8 +647,6 @@ void	ft_parses(char *map, t_all *len)
 	else if (*map == 'E' && *(map + 1) == 'A')
 	{
 		//ft_parser_ea(len, map);
-		if (len->len_ea != -1)
-			return ;// ошибка
 		len->len_ea = 1;
 		len->sum = len->sum + len->len_ea;
 		map = map + 2;
@@ -662,8 +661,8 @@ void	ft_parses(char *map, t_all *len)
 	else if (*map == 'S')
 	{
 		//ft_parser_s(len, map);
-		if (len->len_s != -1)
-			return ; // ошибка
+		//if (len->len_s != -1)
+			//return ; // ошибка
 		len->len_s = 1;
 		len->sum = len->sum + len->len_s;
 		map++;
@@ -678,8 +677,6 @@ void	ft_parses(char *map, t_all *len)
 	else if (*map == 'F')
 	{
 	//	ft_parser_f(len, map);
-		if (len->len_f != -1)
-			return ; //ошибка
 		len->len_f = 1;
 		len->sum = len->sum + len->len_f;
 		map++;
@@ -713,8 +710,6 @@ void	ft_parses(char *map, t_all *len)
 	else if (*map == 'C')
 	{
 		//ft_parser_c(len, map);
-		if (len->len_c != -1)
-			return ;//ошибка
 		len->len_c = 1;
 		len->sum = len->sum + len->len_f;
 		map++;
@@ -742,7 +737,7 @@ void	ft_parses(char *map, t_all *len)
 		ft_colorc(len);
 	}
 
-	else if (len->sum == 8 /*&& (*map == '1' || *map == ' ')*/)
+	else if (len->sum == 8 && (*map == '1' || *map == ' '))
 	{
 		//ft_parser_map(len, map);
 		str = NULL;
@@ -763,12 +758,12 @@ void	ft_parses(char *map, t_all *len)
 			len->flag = 1;
 		}
 	}
-
-	//printf("%d\n", len->flag);
-	// else if (len->sum > 8)
-	// {
-	// 	exit(1);
-	// }
+	else if (len->sum > 8 || len->sum < 8)
+	{
+		printf("ERror");
+		ft_memset(&len, 0, sizeof(len));
+		exit(1);
+	}
 }
 
 // int		my_pix_get(t_win *data, int x, int y)
@@ -1127,6 +1122,10 @@ int		key(int keycode, t_all *all)
 			all->plr.x * 1, all->plr.y * 1, 0x000FF00);
 		}
 	}
+	if (keycode == 53)
+	{
+		exit(1);
+	}
 	plr_luch(all, all->plr.x, all->plr.y);
 	//wall_3d(all, c);
 	//mlx_put_image_to_window(all->win.mlx, all->win.win, all->win.img, 0, 0);
@@ -1149,6 +1148,7 @@ void		ft_col(int max, t_all *len, t_list *head, char *line)
 void	ft_param(t_all *len)
 {
 	len->flag = 0;
+	len->sum = 0;
 	len->len_r = -1;
 	len->len_we = -1;
 	len->len_no = -1;
@@ -1260,6 +1260,12 @@ void	new_bmp(t_all *all)
 	close(bmp.open);
 }
 
+int x_close(int keycode, t_all *all)
+{
+	ft_memset(&all, 0, sizeof(all));
+	exit(1);
+}
+
 void	draw_map(t_all *map, int argc, char *argv)
 {
 	int j;
@@ -1272,43 +1278,12 @@ void	draw_map(t_all *map, int argc, char *argv)
 	map->win.img = mlx_new_image(map->win.mlx, map->width, map->height);
 	map->win.addr = mlx_get_data_addr(map->win.img,
 	&map->win.bpp, &map->win.line_l, &map->win.en);
-
-	// while (++x < (map->y + 1) * 1)
-	// {
-	// 	while (++j < ft_strlen(map->map[x / 1]) * 1)
-	// 	{
-	// 		if (map->map[x / 1][j / 1] == '1')
-	// 		{
-	// 			my_mlx_pixel_put(&map->win, j, x, 0x00FF0000);
-	// 		}
-	// 		if (map->map[x / 1][j / 1] == 'N')
-	// 		{
-	// 			my_mlx_pixel_put(&map->win, j, x, 0x000FF00);
-	// 		}
-	// 		else if (map->map[x / 1][j / 1] == 'S')
-	// 		{
-	// 			my_mlx_pixel_put(&map->win, j, x, 0x000FF00);
-	// 		}
-	// 		if (map->map[x / 1][j / 1] == 'W')
-	// 		{
-	// 			my_mlx_pixel_put(&map->win, j, x, 0x000FF00);
-	// 		}
-	// 		if (map->map[x / 1][j / 1] == 'E')
-	// 		{
-	// 			my_mlx_pixel_put(&map->win, j, x, 0x000FF00);
-	// 		}
-	// 		if (map->map[x / 1][j / 1] == '2')
-	// 		{
-	// 			my_mlx_pixel_put(&map->win, j, x, 0xCC0000);
-	// 		}
-	// 	}
-	// 	j = -1;
-	// }
 	if (argc == 3)
-		if (argv == "--save")
+		if (ft_strncmp(argv, "--save", 7) == 0)
 			new_bmp(map);
 	plr_luch(map, map->plr.x, map->plr.y);
 	mlx_hook(map->win.win, 2, 1L << 0, key, map);
+	mlx_hook(map->win.win, 17, 1L << 17, x_close, map);
 	mlx_put_image_to_window(map->win.mlx, map->win.win, map->win.img, 0, 0);
 	mlx_loop(map->win.mlx);
 }
@@ -1320,30 +1295,51 @@ int		main(int argc, char **argv)
 	int max;
 	char *line;
 
-	len.win.mlx = mlx_init();
-	ft_param(&len);
-	len.fd = open(argv[1], O_RDONLY);
 	line = NULL;
-	head = NULL;
-	while (get_next_line(len.fd, &line))
+	max = ft_strlen(&argv[1][0]);
+	line = ft_strdup(&argv[1][0]);
+	if(argc >= 2 && argc <= 3)
 	{
-		len.str_first = line;
-		ft_parses(line, &len);
-		if (len.flag == 1)
-			break ;
-	}
-	if (len.flag == 0)
-		printf("error");
-	if (ft_strlen(len.str_first) > max)
-		max = ft_strlen(len.str_first);
-	ft_lstadd_front(&head, ft_lstnew(len.str_first));
-	ft_col(max, &len, head, line);
+		if (ft_strncmp(&line[max - 4], ".cub", 5) == 0)
+		{
+			len.win.mlx = mlx_init();
+			ft_param(&len);
+			len.fd = open(argv[1], O_RDONLY);
+			line = NULL;
+			head = NULL;
+			while (get_next_line(len.fd, &line))
+			{
+				len.str_first = line;
+				ft_parses(line, &len);
+				if (len.flag == 1)
+					break ;
+			}
+			if (len.flag == 0)
+				printf("error");
+			if (ft_strlen(len.str_first) > max)
+				max = ft_strlen(len.str_first);
+			ft_lstadd_front(&head, ft_lstnew(len.str_first));
+			ft_col(max, &len, head, line);
 	// while (get_next_line(len.fd, &line))
 	// {
 	// 	if (ft_strlen(line) > max)
 	// 		max = ft_strlen(line);
 	// 	ft_lstadd_back(&head, ft_lstnew(line));
 	// }
-	make_map(&head, ft_lstsize(head), &len, max);
-	draw_map(&len, argc, argv[2]);
+			make_map(&head, ft_lstsize(head), &len, max);
+			draw_map(&len, argc, argv[2]);
+		}
+		else
+		{
+			printf("Eror");
+			ft_memset(&len, 0, sizeof(len));
+			ft_memset(&head, 0, sizeof(head));
+		}
+	}
+	else
+	{
+		printf("Error");
+		ft_memset(&len, 0, sizeof(len));
+		ft_memset(&head, 0, sizeof(head));
+	}
 }
