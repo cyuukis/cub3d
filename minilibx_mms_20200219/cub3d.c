@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/21 21:25:32 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/24 16:45:52 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,12 +276,13 @@ void	make_map2(t_all *len)
 			}
 			if (ft_strrchr(OBJJ, sym))
 				(((len->map[i - 1][j] != ' ') && (len->map[i + 1][j] != ' ')
-				&& (len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' '))
+				&& (len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' ')
+				&& (len->map[i - 1][j - 1] != ' ') && (len->map[i - 1][j + 1] != ' ')
+				&& (len->map[i + 1][j - 1] != ' ') && (len->map[i + 1][j + 1] != ' '))
 				? ft_parses_map(i, j, len->map[i][j], len) : printf("Error"));
-			// if (ft_strrchr("1", sym))
-			// 	(((len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' '))
-			// 	? ft_parses_map(i, j, len->map[i][j], len) : printf("Error"));
 		}
+		//printf("|%s|\n", len->map[i]);
+		//printf("\n");
 		j = -1;
 	}
 	if (len->plr.flag != 0)
@@ -317,6 +318,7 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 		len->y = i;
 	}
 	//i = -1;
+
 	make_map2(len);
 	len->plr.c = malloc(sizeof(float) * len->width);
 	// while (++i < len->y)
@@ -343,7 +345,7 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 	// 	//printf("|%s|\n", len->map[i]);
 	// 	//printf("\n");
 	// 	j = -1;
-	// 		//ft_putendl_fd(map[i]);
+	 		// ft_putendl_fd(map[i]);
 	// }
 	// //printf("%d\n", len->plr.place_two);
 	// i = -1;
@@ -947,8 +949,6 @@ void		plr_luch(t_all *all, float x_p, float y_p)
 	ft_sortingspr(all->count, all);
 	while(++k < all->count)
 	{
-//		a = all->height / (all->plr.c[i] * cos(all->plr.angel - all->plr.direction));
-
 		draw_sprite1(all, all->obj[k].x, all->obj[k].y, all->obj[k].distance);
 	}
 	}
@@ -1268,11 +1268,8 @@ int x_close(int keycode, t_all *all)
 
 void	draw_map(t_all *map, int argc, char *argv)
 {
-	int j;
-	int x;
+	//int i;
 
-	j = -1;
-	x = -1;
 	map->win.mlx = mlx_init();
 	map->win.win = mlx_new_window(map->win.mlx, map->width, map->height, "cub3D");
 	map->win.img = mlx_new_image(map->win.mlx, map->width, map->height);
@@ -1281,6 +1278,7 @@ void	draw_map(t_all *map, int argc, char *argv)
 	if (argc == 3)
 		if (ft_strncmp(argv, "--save", 7) == 0)
 			new_bmp(map);
+	plr_luch(map, map->plr.x, map->plr.y);
 	plr_luch(map, map->plr.x, map->plr.y);
 	mlx_hook(map->win.win, 2, 1L << 0, key, map);
 	mlx_hook(map->win.win, 17, 1L << 17, x_close, map);
@@ -1302,6 +1300,7 @@ int		main(int argc, char **argv)
 	{
 		if (ft_strncmp(&line[max - 4], ".cub", 5) == 0)
 		{
+			max = 1;
 			len.win.mlx = mlx_init();
 			ft_param(&len);
 			len.fd = open(argv[1], O_RDONLY);
@@ -1318,8 +1317,10 @@ int		main(int argc, char **argv)
 				printf("error");
 			if (ft_strlen(len.str_first) > max)
 				max = ft_strlen(len.str_first);
+				printf("1max: %d\n", max);
 			ft_lstadd_front(&head, ft_lstnew(len.str_first));
 			ft_col(max, &len, head, line);
+			printf("2max: %d\n", max);
 	// while (get_next_line(len.fd, &line))
 	// {
 	// 	if (ft_strlen(line) > max)
