@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/19 19:56:31 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/24 22:50:19 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,11 +111,11 @@ typedef struct	s_all // структура для всего вместе
 	int			height;
 	int			w_width;
 	int			w_height;
-	char		*textur_no;
-	char		*textur_so;
-	char		*textur_we;
-	char		*textur_ea;
-	char		*textur_s;
+	char		**textur_no;
+	char		**textur_so;
+	char		**textur_we;
+	char		**textur_ea;
+	char		**textur_s;
 	int			y;
 	float		fov;
 	int			count;

@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/24 18:27:23 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/24 23:05:00 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <fcntl.h>
 #include "ft_struct.h"
 #include "../libft11/libft.h"
-#include <stdio.h>
+#include <stdio.h> ////////
 #include <math.h>
 #define OBJ " 102WESN"
 #define OBJJ "02WESN"
@@ -209,6 +209,8 @@ char	*ft_spacex(char *line, int max)
 	str = NULL;
 	size = ft_strlen(line);
 	str = (char *)malloc(1 + max);
+	if (str ==NULL)
+		exit_error();
 	ft_memcpy(str, line, size);
 	while (size < max)
 	{
@@ -228,6 +230,8 @@ void	make_map3(t_all *len)
 	i = -1;
 	j = -1;
 	len->obj = (t_map *)malloc(sizeof(t_map) * len->plr.place_two);
+	if (len->obj == NULL)
+		exit_error();
 	while (++i < len->y)
 	{
 		while (++j < ft_strlen(len->map[i]))
@@ -235,7 +239,6 @@ void	make_map3(t_all *len)
 			sym = len->map[i][j];
 			if (ft_strrchr("2", sym))
 			{
-
 				ft_parses_map2(i, j, len);
 			}
 		}
@@ -267,7 +270,8 @@ void	make_map2(t_all *len)
 				&& (len->map[i + 1][j - 1] != ' ') && (len->map[i + 1][j + 1] != ' '))
 				? ft_parses_map(i, j, len->map[i][j], len) : exit_error());
 		}
-		//printf("|%s|\n", len->map[i]);
+
+		printf("|%s|\n", len->map[i]);
 		//printf("\n");
 		j = -1;
 	}
@@ -294,16 +298,17 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 	len->plr.place_two = 0;
 	while (tmp)
 	{
-		line = tmp->content;
-		line = ft_spacex(line, max);
+		//line = tmp->content;
+		line = ft_spacex(tmp->content, max);
 		len->map[++i] = line;
 		tmp = tmp->next;
 		len->y = i;
 	}
 	//i = -1;
-
 	make_map2(len);
 	len->plr.c = malloc(sizeof(float) * len->width);
+	if(len->plr.c == NULL)
+		exit_error();
 	// while (++i < len->y)
 	// {
 	// 	while (++j < ft_strlen(len->map[i]))
@@ -352,10 +357,24 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 	return (len->map);
 }
 
+char    **delete_textur(char **textur)
+{
+	int i;
+
+	i = 0;
+	while (textur[i])
+		free(textur[i++]);
+	free(textur);
+	return (NULL);
+}
+
 void	ft_parses(char *map, t_all *len)
 {
 	char	*str;
+	char	*tmp;
 
+	str = NULL;
+	tmp = NULL;
 	mlx_get_screen_size(len->win.mlx, &len->w_width, &len->w_height);
 	if (*map == 'R')
 	{
@@ -365,10 +384,11 @@ void	ft_parses(char *map, t_all *len)
 		map++;
 		len->width = ft_atoi(map);
 		str = ft_itoa(len->width);
-		while (*str != '\0')
+		int i = 0;
+		while (str[i] != '\0')
 		{
 			map++;
-			str++;
+			i++;
 		}
 		map++;
 		len->height = ft_atoi(map);
@@ -378,20 +398,22 @@ void	ft_parses(char *map, t_all *len)
 		: len->width);
 		((len->w_height < len->height) ? len->height = len->w_height
 		: len->height);
+		printf("R\n");
+		free(str);
+		str = NULL;
 	}
 	else if ((*map == 'N' && *(map + 1) == 'O'))
 	{
-		//ft_parser_no(len, map);
 		len->len_no = 1;
 		len->sum = len->sum + len->len_no;
-		map = map + 2;
-		len->textur_no = *ft_split(map, ' ');
+		len->textur_no = ft_split(map + 2, ' ');
+		free(map);
 		if (!(len->imgno.img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_no, &len->imgno.img_w, &len->imgno.img_h)))
+		*len->textur_no, &len->imgno.img_w, &len->imgno.img_h)))
 			exit_error();
 		len->imgno.addr = mlx_get_data_addr(len->imgno.img,
 		&len->imgno.bpp, &len->imgno.line_l, &len->imgno.en);
-
+		delete_textur(len->textur_no);
 	}
 	else if ((*map == 'S' && *(map + 1) == 'O'))
 	{
@@ -399,12 +421,13 @@ void	ft_parses(char *map, t_all *len)
 		len->len_so = 1;
 		len->sum = len->sum + len->len_so;
 		map = map + 2;
-		len->textur_so = *ft_split(map, ' ');
+		len->textur_so = ft_split(map, ' ');
 		if (!(len->imgso.img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_so, &len->imgso.img_w, &len->imgso.img_h)))
+		*len->textur_so, &len->imgso.img_w, &len->imgso.img_h)))
 			exit_error();
 		len->imgso.addr = mlx_get_data_addr(len->imgso.img,
 		&len->imgso.bpp, &len->imgso.line_l, &len->imgso.en);
+		delete_textur(len->textur_so);
 	}
 	else if (*map == 'W' && *(map + 1) == 'E')
 	{
@@ -412,12 +435,13 @@ void	ft_parses(char *map, t_all *len)
 		len->len_we = 1;
 		len->sum = len->sum + len->len_we;
 		map = map + 2;
-		len->textur_we = *ft_split(map, ' ');
+		len->textur_we = ft_split(map, ' ');
 		if (!(len->imgwe.img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_we, &len->imgwe.img_w, &len->imgwe.img_h)))
+		*len->textur_we, &len->imgwe.img_w, &len->imgwe.img_h)))
 			exit_error();
 		len->imgwe.addr = mlx_get_data_addr(len->imgwe.img,
 		&len->imgwe.bpp, &len->imgwe.line_l, &len->imgwe.en);
+		delete_textur(len->textur_we);
 	}
 	else if (*map == 'E' && *(map + 1) == 'A')
 	{
@@ -425,12 +449,13 @@ void	ft_parses(char *map, t_all *len)
 		len->len_ea = 1;
 		len->sum = len->sum + len->len_ea;
 		map = map + 2;
-		len->textur_ea = *ft_split(map, ' ');
+		len->textur_ea = ft_split(map, ' ');
 		if (!(len->imgea.img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_ea, &len->imgea.img_w, &len->imgea.img_h)))
+		*len->textur_ea, &len->imgea.img_w, &len->imgea.img_h)))
 			exit_error();
 		len->imgea.addr = mlx_get_data_addr(len->imgea.img,
 		&len->imgea.bpp, &len->imgea.line_l, &len->imgea.en);
+		delete_textur(len->textur_ea);
 	}
 	else if (*map == 'S')
 	{
@@ -438,12 +463,14 @@ void	ft_parses(char *map, t_all *len)
 		len->len_s = 1;
 		len->sum = len->sum + len->len_s;
 		map++;
-		len->textur_s = *ft_split(map, ' ');
+		len->textur_s = ft_split(map, ' ');
 		if (!(len->imgs.img = mlx_xpm_file_to_image(len->win.mlx,
-		len->textur_s, &len->imgs.img_w, &len->imgs.img_h)))
+		*len->textur_s, &len->imgs.img_w, &len->imgs.img_h)))
 			exit_error();
 		len->imgs.addr = mlx_get_data_addr(len->imgs.img,
 		&len->imgs.bpp, &len->imgs.line_l, &len->imgs.en);
+		delete_textur(len->textur_s);
+
 	}
 	else if (*map == 'F')
 	{
@@ -471,6 +498,8 @@ void	ft_parses(char *map, t_all *len)
 		len->colors.fbits_two < 0 || len->colors.fbits_three < 0)
 			exit_error();
 		ft_colorf(len);
+		//free(str);
+		//str = NULL;
 	}
 	else if (*map == 'C')
 	{
@@ -498,8 +527,10 @@ void	ft_parses(char *map, t_all *len)
 		len->colors.cbits_two < 0 || len->colors.cbits_three < 0)
 			exit_error();
 		ft_colorc(len);
+		printf("C\n");
+		free(str);
+		str = NULL;
 	}
-
 	else if (len->sum == 8 && (*map == '1' || *map == ' '))
 	{
 		//ft_parser_map(len, map);
@@ -526,6 +557,7 @@ void	ft_parses(char *map, t_all *len)
 		ft_memset(&len, 0, sizeof(len));
 		exit_error();
 	}
+
 }
 
 void	my_bit_images_no(t_all *all, float start, int y, float h)
@@ -872,6 +904,7 @@ void		ft_col(int max, t_all *len, t_list *head, char *line)
 			max = ft_strlen(line);
 		ft_lstadd_back(&head, ft_lstnew(line));
 	}
+	free(line);
 }
 
 void	ft_param(t_all *len)
@@ -1040,6 +1073,7 @@ int		main(int argc, char **argv)
 	{
 		if (ft_strncmp(&line[max - 4], ".cub", 5) == 0)
 		{
+			free(line);
 			max = 0;
 			len.win.mlx = mlx_init();
 			ft_param(&len);
@@ -1054,17 +1088,17 @@ int		main(int argc, char **argv)
 				ft_parses(line, &len);
 				if (len.flag == 1)
 					break ;
+				free(len.str_first);
 			}
 			if (len.flag == 0)
 				exit_error();
 			if (ft_strlen(len.str_first) > max)
 				max = ft_strlen(len.str_first) + 1;
-			printf("1max: %d\n", max);
 			ft_lstadd_front(&head, ft_lstnew(len.str_first));
 			ft_col(max, &len, head, line);
-			printf("1max: %d\n", max);
 			make_map(&head, ft_lstsize(head), &len, max);
 			draw_map(&len, argc, argv[2]);
+			close(len.fd);
 		}
 		else
 		{
