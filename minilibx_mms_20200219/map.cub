@@ -1,4 +1,4 @@
-R 600 400
+R 400 400
 NO ./images/sever_gora.xpm
 SO ./images/gori_sochi.xpm
 WE ./images/zapad.xpm
