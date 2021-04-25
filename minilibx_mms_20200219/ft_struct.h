@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/24 22:50:19 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/25 20:01:29 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ typedef struct	s_all // структура для всего вместе
 	t_win		imgs;
 	t_colors	colors;
 	t_coordin	coordin;
+	float		luch_x;
+	float		luch_y;
 	int			x_tex;
 	int			y_tex;
 	int			flagno;

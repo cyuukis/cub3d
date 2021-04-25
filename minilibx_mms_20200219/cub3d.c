@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/24 23:05:00 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/25 20:12:01 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,21 +55,13 @@ void	my_mlx_pixel_put(t_win *data, int x, int y, int color)
 void	direction_player(char sym, t_all *dote)
 {
 	if (sym == 'N')
-	{
 		dote->plr.direction = 3 * M_PI_2;
-	}
 	if (sym == 'S')
-	{
 		dote->plr.direction = M_PI_2;
-	}
 	if (sym == 'W')
-	{
 		dote->plr.direction = M_PI;
-	}
 	if (sym == 'E')
-	{
 		dote->plr.direction = 0;
-	}
 }
 
 void exit_error()
@@ -104,7 +96,7 @@ void	ft_swap(t_all *all, int i, int j)
 }
 
 
-void	ft_sortingspr(int count, t_all *all)
+void	ft_sortingspr(t_all *all)
 {
 	int i;
 	int j;
@@ -112,12 +104,12 @@ void	ft_sortingspr(int count, t_all *all)
 	int flag;
 
 	i = 0;
-	while (i < count)
+	while (i < all->count)
 	{
 		max = all->obj[i].distance;
 		flag = -1;
 		j = i;
-		while (++j < count)
+		while (++j < all->count)
 		{
 			if (all->obj[j].distance > max)
 			{
@@ -260,9 +252,7 @@ void	make_map2(t_all *len)
 		{
 			sym = len->map[i][j];
 			if (!(ft_strrchr(OBJ, sym)))
-			{
 				exit_error();
-			}
 			if (ft_strrchr(OBJJ, sym))
 				(((len->map[i - 1][j] != ' ') && (len->map[i + 1][j] != ' ')
 				&& (len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' ')
@@ -270,15 +260,12 @@ void	make_map2(t_all *len)
 				&& (len->map[i + 1][j - 1] != ' ') && (len->map[i + 1][j + 1] != ' '))
 				? ft_parses_map(i, j, len->map[i][j], len) : exit_error());
 		}
-
-		printf("|%s|\n", len->map[i]);
+		//printf("|%s|\n", len->map[i]);
 		//printf("\n");
 		j = -1;
 	}
 	if (len->plr.flag != 0)
-	{
 		exit_error();
-	}
 	make_map3(len);
 }
 
@@ -298,68 +285,21 @@ char	**make_map(t_list **head, int size, t_all *len, int max)
 	len->plr.place_two = 0;
 	while (tmp)
 	{
-		//line = tmp->content;
 		line = ft_spacex(tmp->content, max);
 		len->map[++i] = line;
 		tmp = tmp->next;
 		len->y = i;
 	}
-	//i = -1;
 	make_map2(len);
 	len->plr.c = malloc(sizeof(float) * len->width);
-	if(len->plr.c == NULL)
+	if (len->plr.c == NULL)
 		exit_error();
-	// while (++i < len->y)
-	// {
-	// 	while (++j < ft_strlen(len->map[i]))
-	// 	{
-	// 		sym = len->map[i][j];
-	// 		if (!(ft_strrchr(OBJ, sym)))
-	// 		{
-	// 			printf("error");//ошибка
-	// 			//printf("|%c|", sym);
-	// 			break ;
-	// 		}
-	// 		if (ft_strrchr(OBJJ, sym))
-	// 		{
-	// 			//printf("|%c|", sym);
-	// 			(((len->map[i - 1][j] != ' ') && (len->map[i + 1][j] != ' ')
-	// 			&& (len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' '))
-	// 			? ft_parses_map(i, j, len->map[i][j], len) : printf("error"));
-	// 			//printf("%f, %f", dot.x, dot.y);
-	// 		}
-
-	// 	}
-	// 	//printf("|%s|\n", len->map[i]);
-	// 	//printf("\n");
-	// 	j = -1;
-	 		// ft_putendl_fd(map[i]);
-	// }
-	// //printf("%d\n", len->plr.place_two);
-	// i = -1;
-	// j = -1;
-	// len->obj = (t_map *)malloc(sizeof(t_map) * len->plr.place_two);
-	// // len->obj = '\0';
-	// while (++i < len->y)
-	// {
-	// 	while (++j < ft_strlen(len->map[i]))
-	// 	{
-	// 		sym = len->map[i][j];
-	// 		if (ft_strrchr("2", sym))
-	// 		{
-
-	// 			ft_parses_map2(i, j, len);
-	// 		}
-	// 	}
-	// 	j = -1;
-	// }
-//	printf("%f\n", len->obj.x);
 	return (len->map);
 }
 
-char    **delete_textur(char **textur)
+char	**delete_textur(char **textur)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (textur[i])
@@ -398,7 +338,7 @@ void	ft_parses(char *map, t_all *len)
 		: len->width);
 		((len->w_height < len->height) ? len->height = len->w_height
 		: len->height);
-		printf("R\n");
+		//printf("R\n");
 		free(str);
 		str = NULL;
 	}
@@ -527,7 +467,7 @@ void	ft_parses(char *map, t_all *len)
 		len->colors.cbits_two < 0 || len->colors.cbits_three < 0)
 			exit_error();
 		ft_colorc(len);
-		printf("C\n");
+		//printf("C\n");
 		free(str);
 		str = NULL;
 	}
@@ -560,16 +500,20 @@ void	ft_parses(char *map, t_all *len)
 
 }
 
+///////////////////////////
+
+//////////////////////////
+
 void	my_bit_images_no(t_all *all, float start, int y, float h)
 {
-	float pix;
+	float	pix;
 
 	pix = h / all->imgno.img_h;
 	all->y_tex = ((float)y - start) / pix;
 }
 void	my_bit_images_so(t_all *all, float start, int y, float h)
 {
-	float pix;
+	float	pix;
 
 	pix = h / all->imgso.img_h;
 	all->y_tex = ((float)y - start) / pix;
@@ -577,7 +521,7 @@ void	my_bit_images_so(t_all *all, float start, int y, float h)
 
 void	my_bit_images_we(t_all *all, float start, int y, float h)
 {
-	float pix;
+	float	pix;
 
 	pix = h / all->imgwe.img_h;
 	all->y_tex = ((float)y - start) / pix;
@@ -585,24 +529,85 @@ void	my_bit_images_we(t_all *all, float start, int y, float h)
 
 void	my_bit_images_ea(t_all *all, float start, int y, float h)
 {
-	float pix;
+	float	pix;
 
 	pix = h / all->imgea.img_h;
 	all->y_tex = ((float)y - start) / pix;
 }
 
-void	wall_3d(t_all *all, float h, float i, float x_w, float y_h)
+void	draw_sn(t_all *all, int y, float a, int i)
+{
+	float	start;
+	int		color;
+
+	start = all->height / 2 - a / 2;
+	if (all->plr.angel >= 0 && all->plr.angel <= M_PI)
+	{
+		all->luch_x = all->luch_x - (int)all->luch_x;
+		all->x_tex = all->luch_x * all->imgso.img_w;
+		my_bit_images_so(all, start, y, a);
+		color = my_pix_get(&all->imgso, all->x_tex, all->y_tex);
+		my_mlx_pixel_put(&all->win, i, y, color);
+	}
+	else if (all->plr.angel >= M_PI || all->plr.angel <= 2 * M_PI)
+	{
+		all->luch_x = all->luch_x - (int)all->luch_x;
+		all->x_tex = all->luch_x * all->imgno.img_w;
+		my_bit_images_no(all, start, y, a);
+		color = my_pix_get(&all->imgno, all->x_tex, all->y_tex);
+		my_mlx_pixel_put(&all->win, i, y, color);
+	}
+}
+
+void	draw_we(t_all *all, int y, float a, int i)
+{
+	float	start;
+	int		color;
+
+	start = all->height / 2 - a / 2;
+	if (all->plr.angel >= M_PI_2 && all->plr.angel <= 3 * M_PI_2)
+	{
+		all->luch_y = all->luch_y - (int)all->luch_y;
+		all->x_tex = all->luch_y * all->imgwe.img_w;
+		my_bit_images_we(all, start, y, a);
+		color = my_pix_get(&all->imgwe, all->x_tex, all->y_tex);
+		my_mlx_pixel_put(&all->win, i, y, color);
+	}
+	else if (all->plr.angel >= 3 * M_PI_2 || all->plr.angel <= 9.42)
+	{
+		all->luch_y = all->luch_y - (int)all->luch_y;
+		all->x_tex = all->luch_y * all->imgea.img_w;
+		my_bit_images_ea(all, start, y, a);
+		color = my_pix_get(&all->imgea, all->x_tex, all->y_tex);
+		my_mlx_pixel_put(&all->win, i, y, color);
+	}
+}
+
+void draw_snwe(t_all *all, int y, float a, int i)
+{
+	if (all->plr.angel < 0)
+		all->plr.angel += 2 * M_PI;
+	if (all->plr.angel > 2 * M_PI)
+		all->plr.angel -= 2 * M_PI;
+	if (all->flagno == -4)
+		draw_sn(all, y, a, i);
+	else if (all->flagno == 4)
+		draw_we(all, y, a, i);
+}
+
+void	wall_3d(t_all *all, int i)
 {
 	float	start;
 	float	end;
 	int		y;
-	int color;
-	int k;
+	float	a;
 
-	k = 0;
 	y = 0;
-	start = all->height / 2 - h / 2;
-	end = all->height / 2 + h / 2;
+	if (all->plr.c[i] > 0)
+		a = all->height / (all->plr.c[i] * \
+		cos(all->plr.angel - all->plr.direction));
+	start = all->height / 2 - a / 2;
+	end = all->height / 2 + a / 2;
 	while (y < start)
 	{
 		my_mlx_pixel_put(&all->win, i, y, all->colors.fbits_color);
@@ -610,293 +615,181 @@ void	wall_3d(t_all *all, float h, float i, float x_w, float y_h)
 	}
 	while (y < all->height && y < end)
 	{
-		if (all->plr.angel < 0)
-			all->plr.angel += 2 * M_PI;
-		if (all->plr.angel > 2 * M_PI)
-			all->plr.angel -= 2 * M_PI;
-		if (all->flagno == -4)
-		{
-			if (all->plr.angel >= 0 && all->plr.angel <= M_PI)
-			{
-				x_w = x_w - (int)x_w;
-				all->x_tex = x_w * all->imgso.img_w;
-				my_bit_images_so(all, start, y, h);
-				color = my_pix_get(&all->imgso, all->x_tex, all->y_tex);
-				my_mlx_pixel_put(&all->win, i, y, color);
-			}
-			else if (all->plr.angel >= M_PI || all->plr.angel <= 2 * M_PI)
-			{
-				x_w = x_w - (int)x_w;
-				all->x_tex = x_w * all->imgno.img_w;
-				my_bit_images_no(all, start, y, h);
-				color = my_pix_get(&all->imgno, all->x_tex, all->y_tex);
-				my_mlx_pixel_put(&all->win, i, y, color);
-			}
-		}
-		else if (all->flagno == 4)
-		{
-			if (all->plr.angel >= M_PI_2 && all->plr.angel <= 3 * M_PI_2)
-			{
-				y_h = y_h - (int)y_h;
-				all->x_tex = y_h * all->imgwe.img_w;
-				my_bit_images_we(all, start, y, h);
-				color = my_pix_get(&all->imgwe, all->x_tex, all->y_tex);
-				my_mlx_pixel_put(&all->win, i, y, color);
-			}
-			else if (all->plr.angel >= 3 * M_PI_2 || all->plr.angel <= 9.42)
-			{
-				y_h = y_h - (int)y_h;
-				all->x_tex = y_h * all->imgea.img_w;
-				my_bit_images_ea(all, start, y, h);
-				color = my_pix_get(&all->imgea, all->x_tex, all->y_tex);
-				my_mlx_pixel_put(&all->win, i, y, color);
-			}
-		}
+		draw_snwe(all, y, a, i);
 		y++;
 	}
-	while (y < all->height)
-	{
+	while (++y < all->height)
 		my_mlx_pixel_put(&all->win, i, y, all->colors.cbits_color);
-		y++;
-	}
-
 }
 
+////////////////////
 
+//////////////////
 
-void		plr_luch(t_all *all, float x_p, float y_p)
+void	col_luch(t_all *all, int i)
 {
-	float x;
-	float y;
-	float c;
-	float step;
-	int i;
-	float a;
+	float	step;
 
+	step = all->fov / all->width;
 	all->plr.c[i] = 0;
+	all->luch_x = all->plr.x + all->plr.c[i] * cos(all->plr.angel);
+	all->luch_y = all->plr.y + all->plr.c[i] * sin(all->plr.angel);
+	while (1)
+	{
+		all->luch_x = all->plr.x + all->plr.c[i] * cos(all->plr.angel);
+		if (all->map[(int)all->luch_y][(int)all->luch_x] == '1')
+		{
+			all->flagno = 4;
+			break ;
+		}
+		all->luch_y = all->plr.y + all->plr.c[i] * sin(all->plr.angel);
+		if (all->map[(int)all->luch_y][(int)all->luch_x] == '1')
+		{
+			all->flagno = -4;
+			break ;
+		}
+		all->plr.c[i] += 0.005F;
+	}
+	all->plr.angel += step;
+	wall_3d(all, i);
+}
+
+void	col_tex(t_all *all)
+{
+	int	g;
+	int	k;
+
+	g = 0;
+	k = 0;
+	if (all->count >= 0)
+	{
+		while (g <= all->count)
+		{
+			all->obj[g].distance = sqrt(pow(all->plr.x - all->obj[g].x, 2) \
+			+ pow(all->plr.y - all->obj[g].y, 2));
+			g++;
+		}
+		ft_sortingspr(all);
+		while (k <= all->count)
+		{
+			draw_sprite1(all, all->obj[k].x, all->obj[k].y, \
+			all->obj[k].distance);
+			k++;
+		}
+	}
+}
+
+void	plr_luch(t_all *all)
+{
+	int		i;
+	float	a;
+
 	all->fov = 0.5F;
 	i = 0;
-	x = 0;
 	all->plr.angel = all->plr.direction - all->fov / 2;
-	step = all->fov / all->width;
 	while (i < all->width)
 	{
-		all->plr.c[i] = 0;
-		x = x_p + all->plr.c[i] * cos(all->plr.angel);
-		y = y_p + all->plr.c[i] * sin(all->plr.angel);
-		while (1)
-		{
-			x = x_p + all->plr.c[i] * cos(all->plr.angel);
-			if (all->map[(int)y][(int)x] == '1') // W E
-			{
-				all->flagno = 4;
-				break ;
-			}
-			y = y_p + all->plr.c[i] * sin(all->plr.angel);
-			if (all->map[(int)y][(int)x] == '1') // S N
-			{
-				all->flagno = -4;
-				break ;
-			}
-			all->plr.c[i] += 0.005F;
-			my_mlx_pixel_put(&all->win, x, y, 0xFFFF00);
-		}
-		all->plr.angel += step;
-		if (all->plr.c[i] > 0)
-			a = all->height / (all->plr.c[i] * cos(all->plr.angel - all->plr.direction));
-		wall_3d(all, a, i, x, y);
-			i++;
+		col_luch(all, i);
+		i++;
 	}
-	int k = 0;
-	int g = 0;
-	if(all->count > 1)
+	col_tex(all);
+}
+
+///////////////////////////
+
+//////////////////////////
+void	key_w(t_all *all)
+{
+	all->plr.y += sin(all->plr.direction);
+	all->plr.x += cos(all->plr.direction);
+	if (all->map[(int)all->plr.y][(int)all->plr.x] != '1')
+		my_mlx_pixel_put(&all->win, all->plr.x * 1, \
+		all->plr.y * 1, 0x000FF00);
+	else
 	{
-	while(++g < all->count)
-		all->obj[g].distance = sqrt(pow(all->plr.x - all->obj[g].x, 2) + pow(all->plr.y - all->obj[g].y, 2));
-	ft_sortingspr(all->count, all);
-	while(++k < all->count)
-	{
-		draw_sprite1(all, all->obj[k].x, all->obj[k].y, all->obj[k].distance);
+		all->plr.y -= sin(all->plr.direction);
+		all->plr.x -= cos(all->plr.direction);
+		my_mlx_pixel_put(&all->win, \
+		all->plr.x * 1, all->plr.y * 1, 0x000FF00);
 	}
+}
+
+void	key_s(t_all *all)
+{
+	all->plr.y -= sin(all->plr.direction);
+	all->plr.x -= cos(all->plr.direction);
+	if (all->map[(int)all->plr.y][(int)all->plr.x] != '1')
+		my_mlx_pixel_put(&all->win, all->plr.x * 1, \
+		all->plr.y * 1, 0x000FF00);
+	else
+	{
+		all->plr.y += sin(all->plr.direction);
+		all->plr.x += cos(all->plr.direction);
+		my_mlx_pixel_put(&all->win, \
+		all->plr.x * 1, all->plr.y * 1, 0x000FF00);
+	}
+}
+
+void	key_a(t_all *all)
+{
+	all->plr.x += sin(all->plr.direction);
+	all->plr.y -= cos(all->plr.direction);
+	if (all->map[(int)all->plr.y][(int)all->plr.x] != '1')
+	{
+		my_mlx_pixel_put(&all->win, \
+		all->plr.x * 1, all->plr.y * 1, 0x000FF00);
 	}
 	else
 	{
-		all->obj[k].distance = sqrt(pow(all->plr.x - all->obj[k].x, 2) + pow(all->plr.y - all->obj[k].y, 2));
-		ft_sortingspr(all->count, all);
-		draw_sprite1(all, all->obj[k].x, all->obj[k].y, all->obj[k].distance);
+		all->plr.x -= sin(all->plr.direction);
+		all->plr.y += cos(all->plr.direction);
+		my_mlx_pixel_put(&all->win, \
+		all->plr.x * 1, all->plr.y * 1, 0x000FF00);
+	}
+}
+
+void	key_d(t_all *all)
+{
+	all->plr.x -= sin(all->plr.direction);
+	all->plr.y += cos(all->plr.direction);
+	if (all->map[(int)all->plr.y][(int)all->plr.x] != '1')
+		my_mlx_pixel_put(&all->win, \
+	all->plr.x * 1, all->plr.y * 1, 0x000FF00);
+	else
+	{
+		all->plr.x += sin(all->plr.direction);
+		all->plr.y -= cos(all->plr.direction);
+		my_mlx_pixel_put(&all->win, \
+		all->plr.x * 1, all->plr.y * 1, 0x000FF00);
 	}
 }
 
 int		key(int keycode, t_all *all)
 {
-	printf("%f, %f\n", all->plr.x, all->plr.y);
-	int j;
-	int i;
-	float c;
+	//printf("%f, %f\n", all->plr.x, all->plr.y);
 
-	i = -1;
-	j = -1;
 	if (keycode == 123)
-	{
 		all->plr.direction -= 0.1;
-		while (++i < (all->y + 1) * 1)
-		{
-			while (++j < ft_strlen(all->map[i / 1]) * 1)
-			{
-				if (all->map[i / 1][j / 1] == '1')
-				{
-					my_mlx_pixel_put(&all->win, j, i, 0x00FF0000);
-				}
-				else
-					my_mlx_pixel_put(&all->win, j, i, 0x00000000);
-			}
-			j = -1;
-		}
-	}
 	if (keycode == 124)
-	{
 		all->plr.direction += 0.1;
-		while (++i < (all->y + 1) * 1)
-		{
-			while (++j < ft_strlen(all->map[i / 1]) * 1)
-			{
-				if (all->map[i / 1][j / 1] == '1')
-				{
-					my_mlx_pixel_put(&all->win, j, i, 0x00FF0000);
-				}
-				else
-					my_mlx_pixel_put(&all->win, j, i, 0x00000000);
-			}
-			j = -1;
-		}
-	}
 	if (keycode == 13)
-	{
-		while (++i < (all->y + 1) * 1)
-		{
-			while (++j < ft_strlen(all->map[i / 1]) * 1)
-			{
-				if (all->map[i / 1][j / 1] == '1')
-				{
-					my_mlx_pixel_put(&all->win, j, i, 0x00FF0000);
-				}
-				else
-					my_mlx_pixel_put(&all->win, j, i, 0x00000000);
-			}
-			j = -1;
-		}
-		all->plr.y += sin(all->plr.direction);
-		all->plr.x += cos(all->plr.direction);
-		if (all->map[(int)all->plr.y][(int)all->plr.x] != '1')
-		{
-			my_mlx_pixel_put(&all->win, all->plr.x * 1,
-		all->plr.y * 1, 0x000FF00);
-		}
-		else
-		{
-			all->plr.y -= sin(all->plr.direction);
-			all->plr.x -= cos(all->plr.direction);
-			my_mlx_pixel_put(&all->win,
-			all->plr.x * 1, all->plr.y * 1, 0x000FF00);
-		}
-	}
+		key_w(all);
 	if (keycode == 1)
-	{
-		while (++i < (all->y + 1) * 1)
-		{
-			while (++j < ft_strlen(all->map[i / 1]) * 1)
-			{
-				if (all->map[i / 1][j / 1] == '1')
-				{
-					my_mlx_pixel_put(&all->win, j, i, 0x00FF0000);
-				}
-				else
-					my_mlx_pixel_put(&all->win, j, i, 0x00000000);
-			}
-			j = -1;
-		}
-		all->plr.y -= sin(all->plr.direction);
-		all->plr.x -= cos(all->plr.direction);
-		if (all->map[(int)all->plr.y][(int)all->plr.x] != '1')
-			my_mlx_pixel_put(&all->win, all->plr.x * 1,
-		all->plr.y * 1, 0x000FF00);
-		else
-		{
-			all->plr.y += sin(all->plr.direction);
-			all->plr.x += cos(all->plr.direction);
-			my_mlx_pixel_put(&all->win,
-			all->plr.x * 1, all->plr.y * 1, 0x000FF00);
-		}
-	}
+		key_s(all);
 	if (keycode == 0)
-	{
-		while (++i < (all->y + 1) * 1)
-		{
-			while (++j < ft_strlen(all->map[i / 1]) * 1)
-			{
-				if (all->map[i / 1][j / 1] == '1')
-				{
-					my_mlx_pixel_put(&all->win, j, i, 0x00FF0000);
-				}
-				else
-					my_mlx_pixel_put(&all->win, j, i, 0x00000000);
-			}
-			j = -1;
-		}
-		all->plr.x += sin(all->plr.direction);
-		all->plr.y -= cos(all->plr.direction);
-		if (all->map[(int)all->plr.y][(int)all->plr.x] != '1')
-		{
-			my_mlx_pixel_put(&all->win,
-			all->plr.x * 1, all->plr.y * 1, 0x000FF00);
-		}
-		else
-		{
-			all->plr.x -= sin(all->plr.direction);
-			all->plr.y += cos(all->plr.direction);
-			my_mlx_pixel_put(&all->win,
-			all->plr.x * 1, all->plr.y * 1, 0x000FF00);
-		}
-
-	}
+		key_a(all);
 	if (keycode == 2)
-	{
-		while (++i < (all->y + 1) * 1)
-		{
-			while (++j < ft_strlen(all->map[i / 1]) * 1)
-			{
-				if (all->map[i / 1][j / 1] == '1')
-				{
-					my_mlx_pixel_put(&all->win, j, i, 0x00FF0000);
-				}
-				else
-					my_mlx_pixel_put(&all->win, j, i, 0x00000000);
-			}
-			j = -1;
-		}
-		all->plr.x -= sin(all->plr.direction);
-		all->plr.y += cos(all->plr.direction);
-		if (all->map[(int)all->plr.y][(int)all->plr.x] != '1')
-			my_mlx_pixel_put(&all->win,
-		all->plr.x * 1, all->plr.y * 1, 0x000FF00);
-		else
-		{
-			all->plr.x += sin(all->plr.direction);
-			all->plr.y -= cos(all->plr.direction);
-			my_mlx_pixel_put(&all->win,
-			all->plr.x * 1, all->plr.y * 1, 0x000FF00);
-		}
-	}
+		key_d(all);
 	if (keycode == 53)
-	{
 		exit(1);
-	}
-	plr_luch(all, all->plr.x, all->plr.y);
+	plr_luch(all);
 	mlx_put_image_to_window(all->win.mlx, all->win.win, all->win.img, 0, 0);
 	return (0);
 }
 
-void		ft_col(int max, t_all *len, t_list *head, char *line)
+///////////////////////////////
+
+void	ft_col(int max, t_all *len, t_list *head, char *line)
 {
 	while (get_next_line(len->fd, &line))
 	{
@@ -923,7 +816,7 @@ void	ft_param(t_all *len)
 
 void	arr_s(unsigned char *file, int color, int size)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < size / 8)
@@ -935,11 +828,11 @@ void	arr_s(unsigned char *file, int color, int size)
 
 void	drawbmp3(t_drwbmp *bmp, t_all *all)
 {
-	int x;
-	int h;
-	int w;
-	int color;
-	int bit;
+	int	x;
+	int	h;
+	int	w;
+	int	color;
+	int	bit;
 
 	h = all->height;
 	w = all->width;
@@ -947,7 +840,7 @@ void	drawbmp3(t_drwbmp *bmp, t_all *all)
 	while (h--)
 	{
 		x = 0;
-		while(x < w)
+		while (x < w)
 		{
 			color = my_pix_get(&all->win, x, h);
 			arr_s(bmp->file + bit, color, 24);
@@ -987,13 +880,13 @@ void	drawbmp2(t_drwbmp *bmp, t_all *all)
 	drawbmp3(bmp, all);
 }
 
-void	drawbmp(t_all *all,int width,int height, t_drwbmp *bmp)
+void	drawbmp(t_all *all, int width, int height, t_drwbmp *bmp)
 {
-	int sum;
+	int	sum;
 
 	bmp->file_ps = (4 - (all->width * 3) % 4) % 4;
 	bmp->size_d = all->width * all->height * 3 + all->height * bmp->file_ps;
-	bmp->file = ft_calloc(14,1);
+	bmp->file = ft_calloc(14, 1);
 	sum = 14 + 40 + bmp->size_d;
 	bmp->file[0] = 'B';
 	bmp->file[1] = 'M';
@@ -1013,17 +906,17 @@ void	drawbmp(t_all *all,int width,int height, t_drwbmp *bmp)
 
 void	new_bmp(t_all *all)
 {
-	t_drwbmp bmp;
+	t_drwbmp	bmp;
 
-	plr_luch(all, all->plr.x, all->plr.y);
-	plr_luch(all, all->plr.x, all->plr.y);
-	bmp.open = open("screen_cub.bmp", O_CREAT | O_WRONLY | O_TRUNC,
+	plr_luch(all);
+	plr_luch(all);
+	bmp.open = open("screen_cub.bmp", O_CREAT | O_WRONLY | O_TRUNC, \
 		S_IREAD | S_IWRITE);
 	drawbmp(all, all->width, all->height, &bmp);
 	close(bmp.open);
 }
 
-int x_close(int keycode, t_all *all)
+int	x_close(int keycode, t_all *all)
 {
 	ft_memset(&all, 0, sizeof(all));
 	exit(1);
@@ -1032,9 +925,10 @@ int x_close(int keycode, t_all *all)
 void	draw_map(t_all *map, int argc, char *argv)
 {
 	map->win.mlx = mlx_init();
-	map->win.win = mlx_new_window(map->win.mlx, map->width, map->height, "cub3D");
+	map->win.win = mlx_new_window(map->win.mlx, map->width, \
+	map->height, "cub3D");
 	map->win.img = mlx_new_image(map->win.mlx, map->width, map->height);
-	map->win.addr = mlx_get_data_addr(map->win.img,
+	map->win.addr = mlx_get_data_addr(map->win.img, \
 	&map->win.bpp, &map->win.line_l, &map->win.en);
 	if (argc == 3)
 	{
@@ -1045,66 +939,84 @@ void	draw_map(t_all *map, int argc, char *argv)
 			exit_error();
 		}
 	}
-	plr_luch(map, map->plr.x, map->plr.y);
-	plr_luch(map, map->plr.x, map->plr.y);
+	plr_luch(map);
+	plr_luch(map);
 	mlx_hook(map->win.win, 2, 1L << 0, key, map);
 	mlx_hook(map->win.win, 17, 1L << 17, x_close, map);
 	mlx_put_image_to_window(map->win.mlx, map->win.win, map->win.img, 0, 0);
 	mlx_loop(map->win.mlx);
 }
 
+void	new_param(t_all *len, char *argv)
+{
+	len->win.mlx = mlx_init();
+	ft_param(len);
+	len->fd = open(argv, O_RDONLY);
+	if (len->fd == -1)
+		exit_error();
+}
+
+void	new_parser(t_all *len, char *line)
+{
+	while (get_next_line(len->fd, &line))
+	{
+		len->str_first = line;
+		ft_parses(line, len);
+		if (len->flag == 1)
+			break ;
+		free(len->str_first);
+	}
+	if (len->flag == 0)
+		exit_error();
+}
+
+void	maping(t_all *len, t_list *head, int max, char *line)
+{
+	ft_lstadd_front(&head, ft_lstnew(len->str_first));
+	ft_col(max, len, head, line);
+	make_map(&head, ft_lstsize(head), len, max);
+}
+
+char	*prs(t_all *len, char *argv, char *line)
+{
+	new_param(len, argv);
+	new_parser(len, line);
+	if (len->flag == 0)
+		exit_error();
+	return (line);
+}
+
+void	exit_ee(int argc)
+{
+	if (argc == 1)
+		exit_error();
+}
+
 int		main(int argc, char **argv)
 {
-	t_list *head;
+	t_list	*head;
 	t_all	len;
-	int max;
-	char *line;
+	int		max;
+	char	*line;
 
-	line = NULL;
-	if (argc == 1)
-	{
-		ft_memset(&len, 0, sizeof(len));
-		ft_memset(&head, 0, sizeof(head));
-		exit_error();
-	}
+	exit_ee(argc);
 	max = ft_strlen(&argv[1][0]);
 	line = ft_strdup(&argv[1][0]);
-	if(argc >= 2 && argc <= 3)
+	if (argc >= 2 && argc <= 3)
 	{
 		if (ft_strncmp(&line[max - 4], ".cub", 5) == 0)
 		{
 			free(line);
 			max = 0;
-			len.win.mlx = mlx_init();
-			ft_param(&len);
-			len.fd = open(argv[1], O_RDONLY);
-			if (len.fd == -1)
-				exit_error();
-			line = NULL;
 			head = NULL;
-			while (get_next_line(len.fd, &line))
-			{
-				len.str_first = line;
-				ft_parses(line, &len);
-				if (len.flag == 1)
-					break ;
-				free(len.str_first);
-			}
-			if (len.flag == 0)
-				exit_error();
+			line = prs(&len, argv[1], line);
 			if (ft_strlen(len.str_first) > max)
 				max = ft_strlen(len.str_first) + 1;
-			ft_lstadd_front(&head, ft_lstnew(len.str_first));
-			ft_col(max, &len, head, line);
-			make_map(&head, ft_lstsize(head), &len, max);
+			maping(&len, head, max, line);
 			draw_map(&len, argc, argv[2]);
 			close(len.fd);
 		}
 		else
-		{
-			ft_memset(&len, 0, sizeof(len));
-			ft_memset(&head, 0, sizeof(head));
 			exit_error();
-		}
 	}
 }
