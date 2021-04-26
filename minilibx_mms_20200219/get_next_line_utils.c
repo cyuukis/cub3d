@@ -6,15 +6,15 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 16:33:13 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/01/15 18:01:59 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/26 21:46:38 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static	size_t		ft_strlen(const char *str)
+static size_t	ft_strlen(const char *str)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (str[i] != '\0')
@@ -22,7 +22,7 @@ static	size_t		ft_strlen(const char *str)
 	return (i);
 }
 
-char				*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*str;
 	size_t	len;
@@ -30,7 +30,8 @@ char				*ft_strjoin(char const *s1, char const *s2)
 	if (!s1)
 		return (NULL);
 	len = ft_strlen(s1) + ft_strlen(s2);
-	if (!(str = malloc(sizeof(char) * (len + 1))))
+	str = malloc(sizeof(char) * (len + 1));
+	if (!str)
 		return (NULL);
 	while (*s1)
 	{
@@ -49,7 +50,7 @@ char				*ft_strjoin(char const *s1, char const *s2)
 	return (str);
 }
 
-char				*ft_strchr(const char *str, int ch)
+char	*ft_strchr(const char *str, int ch)
 {
 	int		i;
 	char	*str2;
@@ -72,7 +73,7 @@ char				*ft_strchr(const char *str, int ch)
 	return (NULL);
 }
 
-char				*ft_strdup(const char *str)
+char	*ft_strdup(const char *str)
 {
 	char	*string;
 	size_t	i;

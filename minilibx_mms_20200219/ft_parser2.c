@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:53:13 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 18:53:41 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/26 23:59:46 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,15 @@ void	ft_parser_f(t_all *len, char *map, char *str)
 	map++;
 	len->colors.fbits_one = ft_atoi(map);
 	str = ft_strchr(map, ',');
+	if (str == NULL)
+		exit_error();
 	map = str;
 	map++;
+	printf("|%s|\n", map);
 	len->colors.fbits_two = ft_atoi(map);
 	str = ft_strchr(map, ',');
+	if (str == NULL)
+		exit_error();
 	map = str;
 	map++;
 	len->colors.fbits_three = ft_atoi(map);
@@ -63,8 +68,8 @@ void	ft_parser_f(t_all *len, char *map, char *str)
 	if (len->colors.fbits_one > 255 || \
 	len->colors.fbits_two > 255 || len->colors.fbits_three > 255)
 		exit_error();
-	if (len->colors.fbits_one < 0 || \
-	len->colors.fbits_two < 0 || len->colors.fbits_three < 0)
+	if (len->colors.fbits_one <= -1 || \
+	len->colors.fbits_two <= -1 || len->colors.fbits_three <= -1)
 		exit_error();
 	ft_colorf(len);
 	free(str);
@@ -76,24 +81,26 @@ void	ft_parser_c(t_all *len, char *map, char *str)
 	len->len_c = 1;
 	len->sum = len->sum + len->len_f;
 	map++;
-	len->colors.cbits_one = ft_atoi(map);
+	len->colors.co = ft_atoi(map++);
 	str = ft_strchr(map, ',');
+	if (str == NULL)
+		exit_error();
 	map = str;
 	map++;
-	len->colors.cbits_two = ft_atoi(map);
+	len->colors.cb = ft_atoi(map);
 	str = ft_strchr(map, ',');
+	if (str == NULL)
+		exit_error();
 	map = str;
 	map++;
-	len->colors.cbits_three = ft_atoi(map);
+	len->colors.ct = ft_atoi(map);
 	str = "";
 	str = ft_strchr(map, ',');
 	if (str != '\0')
 		exit_error();
-	if (len->colors.cbits_one > 255 || \
-	len->colors.cbits_two > 255 || len->colors.cbits_three > 255)
+	if (len->colors.co > 255 || len->colors.cb > 255 || len->colors.ct > 255)
 		exit_error();
-	if (len->colors.cbits_one < 0 || \
-	len->colors.cbits_two < 0 || len->colors.cbits_three < 0)
+	if (len->colors.co <= -1 || len->colors.cb <= -1 || len->colors.ct <= -1)
 		exit_error();
 	ft_colorc(len);
 	free(str);

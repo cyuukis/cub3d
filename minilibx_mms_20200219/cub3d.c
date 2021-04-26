@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 19:25:34 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/26 23:55:46 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ void	ft_colorc(t_all *all)
 	int	g;
 	int	b;
 
-	r = all->colors.cbits_one << 1;
-	g = all->colors.cbits_two << 8;
-	b = all->colors.cbits_three << 0;
+	r = all->colors.co << 1;
+	g = all->colors.cb << 8;
+	b = all->colors.ct << 0;
 	all->colors.cbits_color = r | g | b;
 }
 
@@ -845,6 +845,12 @@ void	ft_param(t_all *len)
 	len->len_so = -1;
 	len->len_c = -1;
 	len->len_f = -1;
+	len->colors.fbits_one = -1;
+	len->colors.fbits_two = -1;
+	len->colors.fbits_three = -1;
+	len->colors.co= -1;
+	len->colors.cb = -1;
+	len->colors.ct= -1;
 }
 
 // void	arr_s(unsigned char *file, int color, int size)
