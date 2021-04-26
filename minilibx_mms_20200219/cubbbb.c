@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/25 16:18:51 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/25 20:12:32 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/26 16:45:10 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,33 +22,26 @@
 #define OBJ " 102WESN"
 #define OBJJ "02WESN"
 
-void	make_map2(t_all *len)
+void	ft_colorf(t_all *all)
 {
-	int		i;
-	int		j;
-	char	sym;
+	int	r;
+	int	g;
+	int	b;
 
-	j = -1;
-	i = -1;
-	while (++i < len->y)
-	{
-		while (++j < ft_strlen(len->map[i]))
-		{
-			sym = len->map[i][j];
-			if (!(ft_strrchr(OBJ, sym)))
-				exit_error();
-			if (ft_strrchr(OBJJ, sym))
-				(((len->map[i - 1][j] != ' ') && (len->map[i + 1][j] != ' ')
-				&& (len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' ')
-				&& (len->map[i - 1][j - 1] != ' ') && (len->map[i - 1][j + 1] != ' ')
-				&& (len->map[i + 1][j - 1] != ' ') && (len->map[i + 1][j + 1] != ' '))
-				? ft_parses_map(i, j, len->map[i][j], len) : exit_error());
-		}
-		//printf("|%s|\n", len->map[i]);
-		//printf("\n");
-		j = -1;
-	}
-	if (len->plr.flag != 0)
-		exit_error();
-	make_map3(len);
+	r = all->colors.fbits_one << 1;
+	g = all->colors.fbits_two << 8;
+	b = all->colors.fbits_three << 0;
+	all->colors.fbits_color = r | g | b;
+}
+
+void	ft_colorc(t_all *all)
+{
+	int	r;
+	int	g;
+	int	b;
+
+	r = all->colors.cbits_one << 1;
+	g = all->colors.cbits_two << 8;
+	b = all->colors.cbits_three << 0;
+	all->colors.cbits_color = r | g | b;
 }

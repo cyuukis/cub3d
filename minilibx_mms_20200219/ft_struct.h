@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/25 20:01:29 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/26 16:33:35 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ typedef struct s_coordin
 	int ix;
 	int jy;
 	int color;
+	int sc;
 }	t_coordin;
 
 typedef struct s_drwbmp

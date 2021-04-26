@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/25 20:12:01 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/26 17:04:20 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,21 @@
 
 void	ft_colorf(t_all *all)
 {
-	int r;
-	int g;
-	int b;
+	int	r;
+	int	g;
+	int	b;
 
 	r = all->colors.fbits_one << 1;
 	g = all->colors.fbits_two << 8;
 	b = all->colors.fbits_three << 0;
 	all->colors.fbits_color = r | g | b;
 }
+
 void	ft_colorc(t_all *all)
 {
-	int r;
-	int g;
-	int b;
+	int	r;
+	int	g;
+	int	b;
 
 	r = all->colors.cbits_one << 1;
 	g = all->colors.cbits_two << 8;
@@ -48,8 +49,9 @@ void	ft_colorc(t_all *all)
 void	my_mlx_pixel_put(t_win *data, int x, int y, int color)
 {
 	char	*dst;
+
 	dst = data->addr + (y * data->line_l + x * (data->bpp / 8));
-	*(unsigned int*)dst = color;
+	*(unsigned int *)dst = color;
 }
 
 void	direction_player(char sym, t_all *dote)
@@ -64,25 +66,26 @@ void	direction_player(char sym, t_all *dote)
 		dote->plr.direction = 0;
 }
 
-void exit_error()
+void	exit_error(void)
 {
-	write(2, "Error\n",6);
-	write(2,"Error in the parser\n", 20);
+	write(2, "Error\n", 6);
+	write(2, "Error in the parser\n", 20);
 	exit(1);
 }
 
-int		my_pix_get(t_win *data, int x, int y)
+int	my_pix_get(t_win *data, int x, int y)
 {
 	char	*dst;
+
 	dst = data->addr + (y * data->line_l + x * (data->bpp / 8));
-	return *(unsigned int*)dst;
+	return (*(unsigned int *)dst);
 }
 
 void	ft_swap(t_all *all, int i, int j)
 {
-	float x;
-	float y;
-	float codirdis;
+	float	x;
+	float	y;
+	float	codirdis;
 
 	codirdis = all->obj[i].distance;
 	x = all->obj[i].x;
@@ -95,13 +98,12 @@ void	ft_swap(t_all *all, int i, int j)
 	all->obj[j].y = y;
 }
 
-
 void	ft_sortingspr(t_all *all)
 {
-	int i;
-	int j;
-	int max;
-	int flag;
+	int	i;
+	int	j;
+	int	max;
+	int	flag;
 
 	i = 0;
 	while (i < all->count)
@@ -123,52 +125,61 @@ void	ft_sortingspr(t_all *all)
 	}
 }
 
-void draw_sprite1(t_all *all, float x, float y, float dist)
+void	draw_textur(t_all *all, float dist, float i, float j)
 {
-	float teta;
-	// float gamma;
-	int scr_size;
-	float i;
-	float j;
+	if (all->coordin.ix >= 0 && all->coordin.ix < all->width \
+	&& all->plr.c[(int)all->coordin.ix] >= dist)
+	{
+		i = (all->coordin.ix - all->coordin.proj_we) \
+		/ ((float)all->coordin.sc / all->imgs.img_w);
+		all->coordin.jy = all->coordin.proj_height;
+		while (all->coordin.jy < all->coordin.sc + all->coordin.proj_height)
+		{
+			if (all->coordin.jy >= 0 && all->coordin.jy < all->height)
+			{
+				j = (all->coordin.jy - all->coordin.proj_height) \
+				/ ((float)all->coordin.sc / all->imgs.img_h);
+				all->coordin.color = my_pix_get(&all->imgs, i, j);
+				if (all->coordin.color != 0)
+					my_mlx_pixel_put(&all->win, all->coordin.ix, \
+					all->coordin.jy, all->coordin.color);
+			}
+			all->coordin.jy++;
+		}
+	}
+}
+
+void	draw_sprite1(t_all *all, float x, float y, float dist)
+{
+	float	teta;
+	float	i;
+	float	j;
 
 	teta = atan2(y - all->plr.y, x - all->plr.x);
 	while (teta - all->plr.direction > M_PI)
 		teta -= 2 * M_PI;
 	while (teta - all->plr.direction < -M_PI)
 		teta += 2 * M_PI;
-	if (2 * (teta - all->plr.direction) < -M_PI_2 || 2 * (teta - all->plr.direction) > M_PI_2)
+	if (2 * (teta - all->plr.direction) < -M_PI_2 \
+	|| 2 * (teta - all->plr.direction) > M_PI_2)
 		return ;
-	scr_size = (int)(all->height / dist);
-		all->coordin.proj_we = -cos(2 * (teta - all->plr.direction) + M_PI_2) * all->width + all->width / 2 - scr_size / 2;
-	all->coordin.proj_height = all->height / 2 - scr_size / 2;
+	all->coordin.sc = (int)(all->height / dist);
+	all->coordin.proj_we = -cos(2 * (teta - all->plr.direction) \
+	+ M_PI_2) * all->width + all->width / 2 - all->coordin.sc / 2;
+	all->coordin.proj_height = all->height / 2 - all->coordin.sc / 2;
 	all->coordin.ix = all->coordin.proj_we;
-	while (all->coordin.ix < scr_size + all->coordin.proj_we)
+	while (all->coordin.ix < all->coordin.sc + all->coordin.proj_we)
 	{
-		if (all->coordin.ix >= 0 && all->coordin.ix < all->width && all->plr.c[(int)all->coordin.ix] >= dist)
-		{
-			i = (all->coordin.ix - all->coordin.proj_we) / ((float)scr_size / all->imgs.img_w);
-			all->coordin.jy = all->coordin.proj_height;
-			while (all->coordin.jy < scr_size + all->coordin.proj_height)
-			{
-				if (all->coordin.jy >= 0 && all->coordin.jy < all->height)
-				{
-					j = (all->coordin.jy - all->coordin.proj_height) / ((float)scr_size / all->imgs.img_h);
-					all->coordin.color = my_pix_get(&all->imgs, i, j);
-					if (all->coordin.color != 0)
-						my_mlx_pixel_put(&all->win, all->coordin.ix, all->coordin.jy, all->coordin.color);
-			}
-			all->coordin.jy++;
-			}
-		}
+		draw_textur(all, dist, i, j);
 		all->coordin.ix++;
 	}
 }
 
 void	ft_parses_map2(int y, int x, t_all *all)
 {
-	static int count;
-	float dx;
-	float dy;
+	static int	count;
+	float		dx;
+	float		dy;
 
 	all->obj[count].x = x + 0.5;
 	all->obj[count].y = y + 0.5;
@@ -195,9 +206,7 @@ char	*ft_spacex(char *line, int max)
 {
 	int		size;
 	char	*str;
-	int i;
 
-	i = 0;
 	str = NULL;
 	size = ft_strlen(line);
 	str = (char *)malloc(1 + max);
@@ -230,12 +239,22 @@ void	make_map3(t_all *len)
 		{
 			sym = len->map[i][j];
 			if (ft_strrchr("2", sym))
-			{
 				ft_parses_map2(i, j, len);
-			}
 		}
 		j = -1;
 	}
+}
+
+void	make_map_rectl(t_all *len, int i, int j)
+{
+	if ((len->map[i - 1][j] != ' ') && (len->map[i + 1][j] != ' ') \
+	&& (len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' ') \
+	&& (len->map[i - 1][j - 1] != ' ') && (len->map[i - 1][j + 1] != ' ') \
+	&& (len->map[i + 1][j - 1] != ' ') \
+	&& (len->map[i + 1][j + 1] != ' '))
+		ft_parses_map(i, j, len->map[i][j], len);
+	else
+		exit_error();
 }
 
 void	make_map2(t_all *len)
@@ -254,14 +273,8 @@ void	make_map2(t_all *len)
 			if (!(ft_strrchr(OBJ, sym)))
 				exit_error();
 			if (ft_strrchr(OBJJ, sym))
-				(((len->map[i - 1][j] != ' ') && (len->map[i + 1][j] != ' ')
-				&& (len->map[i][j + 1] != ' ') && (len->map[i][j - 1] != ' ')
-				&& (len->map[i - 1][j - 1] != ' ') && (len->map[i - 1][j + 1] != ' ')
-				&& (len->map[i + 1][j - 1] != ' ') && (len->map[i + 1][j + 1] != ' '))
-				? ft_parses_map(i, j, len->map[i][j], len) : exit_error());
+				make_map_rectl(len, i, j);
 		}
-		//printf("|%s|\n", len->map[i]);
-		//printf("\n");
 		j = -1;
 	}
 	if (len->plr.flag != 0)
@@ -308,196 +321,215 @@ char	**delete_textur(char **textur)
 	return (NULL);
 }
 
+void	ft_parser_r(t_all *len, char *map)
+{
+	char	*str;
+	int		i;
+
+	i = 0;
+	str = NULL;
+	len->len_r = 1;
+	len->sum = len->sum + len->len_r;
+	map++;
+	len->width = ft_atoi(map);
+	str = ft_itoa(len->width);
+	while (str[i] != '\0')
+	{
+		map++;
+		i++;
+	}
+	map++;
+	len->height = ft_atoi(map);
+	if (len->width < 1 || len->height < 1)
+		exit_error();
+	if (len->w_width < len->width)
+		len->width = len->w_width;
+	if (len->w_height < len->height)
+		len->height = len->w_height;
+	free(str);
+	str = NULL;
+}
+
+void	ft_parser_no(t_all *len, char *map)
+{
+	len->len_no = 1;
+	len->sum = len->sum + len->len_no;
+	len->textur_no = ft_split(map + 2, ' ');
+	free(map);
+	len->imgno.img = mlx_xpm_file_to_image(len->win.mlx, \
+	*len->textur_no, &len->imgno.img_w, &len->imgno.img_h);
+	if (len->imgno.img == NULL)
+		exit_error();
+	len->imgno.addr = mlx_get_data_addr(len->imgno.img, \
+	&len->imgno.bpp, &len->imgno.line_l, &len->imgno.en);
+	delete_textur(len->textur_no);
+}
+
+void	ft_parser_so(t_all *len, char *map)
+{
+	len->len_so = 1;
+	len->sum = len->sum + len->len_so;
+	map = map + 2;
+	len->textur_so = ft_split(map, ' ');
+	len->imgso.img = mlx_xpm_file_to_image(len->win.mlx, \
+	*len->textur_so, &len->imgso.img_w, &len->imgso.img_h);
+	if (len->imgso.img == NULL)
+		exit_error();
+	len->imgso.addr = mlx_get_data_addr(len->imgso.img, \
+	&len->imgso.bpp, &len->imgso.line_l, &len->imgso.en);
+	delete_textur(len->textur_so);
+}
+
+void	ft_parser_we(t_all *len, char *map)
+{
+	len->len_we = 1;
+	len->sum = len->sum + len->len_we;
+	map = map + 2;
+	len->textur_we = ft_split(map, ' ');
+	len->imgwe.img = mlx_xpm_file_to_image(len->win.mlx, \
+	*len->textur_we, &len->imgwe.img_w, &len->imgwe.img_h);
+	if (len->imgwe.img == NULL)
+		exit_error();
+	len->imgwe.addr = mlx_get_data_addr(len->imgwe.img, \
+	&len->imgwe.bpp, &len->imgwe.line_l, &len->imgwe.en);
+	delete_textur(len->textur_we);
+}
+
+void	ft_parser_ea(t_all *len, char *map)
+{
+	len->len_ea = 1;
+	len->sum = len->sum + len->len_ea;
+	map = map + 2;
+	len->textur_ea = ft_split(map, ' ');
+	len->imgea.img = mlx_xpm_file_to_image(len->win.mlx, \
+	*len->textur_ea, &len->imgea.img_w, &len->imgea.img_h);
+	if (len->imgea.img == NULL)
+		exit_error();
+	len->imgea.addr = mlx_get_data_addr(len->imgea.img, \
+	&len->imgea.bpp, &len->imgea.line_l, &len->imgea.en);
+	delete_textur(len->textur_ea);
+}
+
+void	ft_parser_s(t_all *len, char *map)
+{
+	len->len_s = 1;
+	len->sum = len->sum + len->len_s;
+	map++;
+	len->textur_s = ft_split(map, ' ');
+	len->imgs.img = mlx_xpm_file_to_image(len->win.mlx, \
+	*len->textur_s, &len->imgs.img_w, &len->imgs.img_h);
+	if (len->imgs.img == NULL)
+		exit_error();
+	len->imgs.addr = mlx_get_data_addr(len->imgs.img, \
+	&len->imgs.bpp, &len->imgs.line_l, &len->imgs.en);
+	delete_textur(len->textur_s);
+}
+
+void	ft_parser_f(t_all *len, char *map, char *str)
+{
+	len->len_f = 1;
+	len->sum = len->sum + len->len_f;
+	map++;
+	len->colors.fbits_one = ft_atoi(map);
+	str = ft_strchr(map, ',');
+	map = str;
+	map++;
+	len->colors.fbits_two = ft_atoi(map);
+	str = ft_strchr(map, ',');
+	map = str;
+	map++;
+	len->colors.fbits_three = ft_atoi(map);
+	str = "";
+	str = ft_strchr(map, ',');
+	if (str != '\0')
+		exit_error();
+	if (len->colors.fbits_one > 255 || \
+	len->colors.fbits_two > 255 || len->colors.fbits_three > 255)
+		exit_error();
+	if (len->colors.fbits_one < 0 || \
+	len->colors.fbits_two < 0 || len->colors.fbits_three < 0)
+		exit_error();
+	ft_colorf(len);
+	free(str);
+	str = NULL;
+}
+
+void	ft_parser_c(t_all *len, char *map, char *str)
+{
+	len->len_c = 1;
+	len->sum = len->sum + len->len_f;
+	map++;
+	len->colors.cbits_one = ft_atoi(map);
+	str = ft_strchr(map, ',');
+	map = str;
+	map++;
+	len->colors.cbits_two = ft_atoi(map);
+	str = ft_strchr(map, ',');
+	map = str;
+	map++;
+	len->colors.cbits_three = ft_atoi(map);
+	str = "";
+	str = ft_strchr(map, ',');
+	if (str != '\0')
+		exit_error();
+	if (len->colors.cbits_one > 255 || \
+	len->colors.cbits_two > 255 || len->colors.cbits_three > 255)
+		exit_error();
+	if (len->colors.cbits_one < 0 || \
+	len->colors.cbits_two < 0 || len->colors.cbits_three < 0)
+		exit_error();
+	ft_colorc(len);
+	free(str);
+	str = NULL;
+}
+
+void	ft_parser_map(t_all *len, char *map)
+{
+	char	*str;
+
+	str = NULL;
+	if (*map == ' ')
+	{
+		while (*map != '\0')
+		{
+			if (*map == '1')
+			{
+				len->flag = 1;
+				break ;
+			}
+			map++;
+		}
+	}
+	if (*map == '1')
+		len->flag = 1;
+}
+
 void	ft_parses(char *map, t_all *len)
 {
 	char	*str;
-	char	*tmp;
 
 	str = NULL;
-	tmp = NULL;
 	mlx_get_screen_size(len->win.mlx, &len->w_width, &len->w_height);
 	if (*map == 'R')
-	{
-		//ft_parser_r(len, map);
-		len->len_r = 1;
-		len->sum = len->sum + len->len_r;
-		map++;
-		len->width = ft_atoi(map);
-		str = ft_itoa(len->width);
-		int i = 0;
-		while (str[i] != '\0')
-		{
-			map++;
-			i++;
-		}
-		map++;
-		len->height = ft_atoi(map);
-		if (len->width < 1 || len->height < 1)
-			exit_error();
-		((len->w_width < len->width) ? len->width = len->w_width
-		: len->width);
-		((len->w_height < len->height) ? len->height = len->w_height
-		: len->height);
-		//printf("R\n");
-		free(str);
-		str = NULL;
-	}
+		ft_parser_r(len, map);
 	else if ((*map == 'N' && *(map + 1) == 'O'))
-	{
-		len->len_no = 1;
-		len->sum = len->sum + len->len_no;
-		len->textur_no = ft_split(map + 2, ' ');
-		free(map);
-		if (!(len->imgno.img = mlx_xpm_file_to_image(len->win.mlx,
-		*len->textur_no, &len->imgno.img_w, &len->imgno.img_h)))
-			exit_error();
-		len->imgno.addr = mlx_get_data_addr(len->imgno.img,
-		&len->imgno.bpp, &len->imgno.line_l, &len->imgno.en);
-		delete_textur(len->textur_no);
-	}
+		ft_parser_no(len, map);
 	else if ((*map == 'S' && *(map + 1) == 'O'))
-	{
-		//ft_parser_so(len, map);
-		len->len_so = 1;
-		len->sum = len->sum + len->len_so;
-		map = map + 2;
-		len->textur_so = ft_split(map, ' ');
-		if (!(len->imgso.img = mlx_xpm_file_to_image(len->win.mlx,
-		*len->textur_so, &len->imgso.img_w, &len->imgso.img_h)))
-			exit_error();
-		len->imgso.addr = mlx_get_data_addr(len->imgso.img,
-		&len->imgso.bpp, &len->imgso.line_l, &len->imgso.en);
-		delete_textur(len->textur_so);
-	}
+		ft_parser_so(len, map);
 	else if (*map == 'W' && *(map + 1) == 'E')
-	{
-		//ft_parser_we(len, map);
-		len->len_we = 1;
-		len->sum = len->sum + len->len_we;
-		map = map + 2;
-		len->textur_we = ft_split(map, ' ');
-		if (!(len->imgwe.img = mlx_xpm_file_to_image(len->win.mlx,
-		*len->textur_we, &len->imgwe.img_w, &len->imgwe.img_h)))
-			exit_error();
-		len->imgwe.addr = mlx_get_data_addr(len->imgwe.img,
-		&len->imgwe.bpp, &len->imgwe.line_l, &len->imgwe.en);
-		delete_textur(len->textur_we);
-	}
+		ft_parser_we(len, map);
 	else if (*map == 'E' && *(map + 1) == 'A')
-	{
-		//ft_parser_ea(len, map);
-		len->len_ea = 1;
-		len->sum = len->sum + len->len_ea;
-		map = map + 2;
-		len->textur_ea = ft_split(map, ' ');
-		if (!(len->imgea.img = mlx_xpm_file_to_image(len->win.mlx,
-		*len->textur_ea, &len->imgea.img_w, &len->imgea.img_h)))
-			exit_error();
-		len->imgea.addr = mlx_get_data_addr(len->imgea.img,
-		&len->imgea.bpp, &len->imgea.line_l, &len->imgea.en);
-		delete_textur(len->textur_ea);
-	}
+		ft_parser_ea(len, map);
 	else if (*map == 'S')
-	{
-		//ft_parser_s(len, map);
-		len->len_s = 1;
-		len->sum = len->sum + len->len_s;
-		map++;
-		len->textur_s = ft_split(map, ' ');
-		if (!(len->imgs.img = mlx_xpm_file_to_image(len->win.mlx,
-		*len->textur_s, &len->imgs.img_w, &len->imgs.img_h)))
-			exit_error();
-		len->imgs.addr = mlx_get_data_addr(len->imgs.img,
-		&len->imgs.bpp, &len->imgs.line_l, &len->imgs.en);
-		delete_textur(len->textur_s);
-
-	}
+		ft_parser_s(len, map);
 	else if (*map == 'F')
-	{
-	//	ft_parser_f(len, map);
-		len->len_f = 1;
-		len->sum = len->sum + len->len_f;
-		map++;
-		len->colors.fbits_one = ft_atoi(map);
-		str = ft_strchr(map, ',');
-		map = str;
-		map++;
-		len->colors.fbits_two = ft_atoi(map);
-		str = ft_strchr(map, ',');
-		map = str;
-		map++;
-		len->colors.fbits_three = ft_atoi(map);
-		str = "";
-		str = ft_strchr(map, ',');
-		if (str != '\0')
-			exit_error();
-		if (len->colors.fbits_one > 255 ||
-		len->colors.fbits_two > 255 || len->colors.fbits_three > 255)
-			exit_error();
-		if (len->colors.fbits_one < 0 ||
-		len->colors.fbits_two < 0 || len->colors.fbits_three < 0)
-			exit_error();
-		ft_colorf(len);
-		//free(str);
-		//str = NULL;
-	}
+		ft_parser_f(len, map, str);
 	else if (*map == 'C')
-	{
-		//ft_parser_c(len, map);
-		len->len_c = 1;
-		len->sum = len->sum + len->len_f;
-		map++;
-		len->colors.cbits_one = ft_atoi(map);
-		str = ft_strchr(map, ',');
-		map = str;
-		map++;
-		len->colors.cbits_two = ft_atoi(map);
-		str = ft_strchr(map, ',');
-		map = str;
-		map++;
-		len->colors.cbits_three = ft_atoi(map);
-		str = "";
-		str = ft_strchr(map, ',');
-		if (str != '\0')
-			exit_error();
-		if (len->colors.cbits_one > 255 ||
-		len->colors.cbits_two > 255 || len->colors.cbits_three > 255)
-			exit_error();
-		if (len->colors.cbits_one < 0 ||
-		len->colors.cbits_two < 0 || len->colors.cbits_three < 0)
-			exit_error();
-		ft_colorc(len);
-		//printf("C\n");
-		free(str);
-		str = NULL;
-	}
+		ft_parser_c(len, map, str);
 	else if (len->sum == 8 && (*map == '1' || *map == ' '))
-	{
-		//ft_parser_map(len, map);
-		str = NULL;
-		if (*map == ' ')
-		{
-			while (*map != '\0')
-			{
-				if (*map == '1')
-				{
-					len->flag = 1;
-					break ;
-				}
-				map++;
-			}
-		}
-		if (*map == '1')
-		{
-			len->flag = 1;
-		}
-	}
+		ft_parser_map(len, map);
 	else if (len->sum > 8 || len->sum < 8)
-	{
-		ft_memset(&len, 0, sizeof(len));
 		exit_error();
-	}
-
 }
 
 ///////////////////////////
@@ -511,6 +543,7 @@ void	my_bit_images_no(t_all *all, float start, int y, float h)
 	pix = h / all->imgno.img_h;
 	all->y_tex = ((float)y - start) / pix;
 }
+
 void	my_bit_images_so(t_all *all, float start, int y, float h)
 {
 	float	pix;
@@ -583,7 +616,7 @@ void	draw_we(t_all *all, int y, float a, int i)
 	}
 }
 
-void draw_snwe(t_all *all, int y, float a, int i)
+void	draw_snwe(t_all *all, int y, float a, int i)
 {
 	if (all->plr.angel < 0)
 		all->plr.angel += 2 * M_PI;
@@ -764,10 +797,8 @@ void	key_d(t_all *all)
 	}
 }
 
-int		key(int keycode, t_all *all)
+int	key(int keycode, t_all *all)
 {
-	//printf("%f, %f\n", all->plr.x, all->plr.y);
-
 	if (keycode == 123)
 		all->plr.direction -= 0.1;
 	if (keycode == 124)
@@ -992,7 +1023,7 @@ void	exit_ee(int argc)
 		exit_error();
 }
 
-int		main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_list	*head;
 	t_all	len;
