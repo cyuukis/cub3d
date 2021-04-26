@@ -8,6 +8,14 @@
 		"atomic": "c",
 		"mutex": "c",
 		"unordered_map": "c",
-		"utility": "c"
+		"utility": "c",
+		"get_next_line.h": "c",
+		"mlx.h": "c",
+		"fcntl.h": "c",
+		"libft.h": "c",
+		"stdlib.h": "c",
+		"unistd.h": "c",
+		"stdio.h": "c",
+		"math.h": "c"
 	}
 }

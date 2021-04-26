@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 19:58:02 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/26 19:56:46 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include "ft_struct.h"
-# include "libft11/libft.h"
+# include "../libft11/libft.h"
 # include <stdio.h>
 # include <math.h>
 # define OBJ " 102WESN"
