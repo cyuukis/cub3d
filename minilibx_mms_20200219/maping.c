@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 17:55:41 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 18:03:03 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/27 20:28:26 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char	*ft_spacex(char *line, int max)
 	str = NULL;
 	size = ft_strlen(line);
 	str = (char *)malloc(1 + max);
-	if (str ==NULL)
+	if (str == NULL)
 		exit_error();
 	ft_memcpy(str, line, size);
 	while (size < max)
@@ -93,7 +93,6 @@ static void	ft_col(int max, t_all *len, t_list *head, char *line)
 			max = ft_strlen(line);
 		ft_lstadd_back(&head, ft_lstnew(line));
 	}
-	free(line);
 }
 
 void	maping(t_all *len, t_list *head, int max, char *line)

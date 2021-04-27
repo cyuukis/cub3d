@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:45:25 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 18:46:23 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/27 20:30:58 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,14 @@ void	ft_parser_r(t_all *len, char *map)
 	str = NULL;
 	len->len_r = 1;
 	len->sum = len->sum + len->len_r;
-	map++;
-	len->width = ft_atoi(map);
+	len->width = ft_atoi(map + 1);
 	str = ft_itoa(len->width);
 	while (str[i] != '\0')
 	{
 		map++;
 		i++;
 	}
-	map++;
-	len->height = ft_atoi(map);
+	len->height = ft_atoi(map + 2);
 	if (len->width < 1 || len->height < 1)
 		exit_error();
 	if (len->w_width < len->width)
@@ -38,7 +36,6 @@ void	ft_parser_r(t_all *len, char *map)
 	if (len->w_height < len->height)
 		len->height = len->w_height;
 	free(str);
-	str = NULL;
 }
 
 void	ft_parser_no(t_all *len, char *map)
@@ -60,14 +57,14 @@ void	ft_parser_so(t_all *len, char *map)
 {
 	len->len_so = 1;
 	len->sum = len->sum + len->len_so;
-	map = map + 2;
-	len->textur_so = ft_split(map, ' ');
+	len->textur_so = ft_split(map + 2, ' ');
 	len->imgso.img = mlx_xpm_file_to_image(len->win.mlx, \
 	*len->textur_so, &len->imgso.img_w, &len->imgso.img_h);
 	if (len->imgso.img == NULL)
 		exit_error();
 	len->imgso.addr = mlx_get_data_addr(len->imgso.img, \
 	&len->imgso.bpp, &len->imgso.line_l, &len->imgso.en);
+	free(map);
 	delete_textur(len->textur_so);
 }
 
@@ -75,8 +72,7 @@ void	ft_parser_we(t_all *len, char *map)
 {
 	len->len_we = 1;
 	len->sum = len->sum + len->len_we;
-	map = map + 2;
-	len->textur_we = ft_split(map, ' ');
+	len->textur_we = ft_split(map + 2, ' ');
 	len->imgwe.img = mlx_xpm_file_to_image(len->win.mlx, \
 	*len->textur_we, &len->imgwe.img_w, &len->imgwe.img_h);
 	if (len->imgwe.img == NULL)
@@ -84,6 +80,7 @@ void	ft_parser_we(t_all *len, char *map)
 	len->imgwe.addr = mlx_get_data_addr(len->imgwe.img, \
 	&len->imgwe.bpp, &len->imgwe.line_l, &len->imgwe.en);
 	delete_textur(len->textur_we);
+	free(map);
 }
 
 void	ft_parses(char *map, t_all *len)
@@ -112,4 +109,5 @@ void	ft_parses(char *map, t_all *len)
 		ft_parser_map(len, map);
 	else if (len->sum > 8 || len->sum < 8)
 		exit_error();
+	ft_parses_utech(len, map);
 }

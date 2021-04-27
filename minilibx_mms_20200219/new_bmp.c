@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 19:05:11 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 19:05:12 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/27 20:34:09 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ void	new_bmp(t_all *all)
 {
 	t_drwbmp	bmp;
 
-	plr_luch(all);
 	plr_luch(all);
 	bmp.open = open("screen_cub.bmp", O_CREAT | O_WRONLY | O_TRUNC, \
 		S_IREAD | S_IWRITE);

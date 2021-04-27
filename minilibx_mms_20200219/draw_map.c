@@ -6,11 +6,17 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:19:30 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 19:30:44 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/27 20:32:54 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_struct.h"
+
+void	ft_parses_utech(t_all *len, char *map)
+{
+	if (*map == 'R' || *map == 'F' || *map == 'C')
+		free(len->str_first);
+}
 
 int	x_close(int keycode, t_all *all)
 {
@@ -56,7 +62,6 @@ void	draw_map(t_all *map, int argc, char *argv)
 			exit_error();
 		}
 	}
-	plr_luch(map);
 	plr_luch(map);
 	mlx_hook(map->win.win, 2, 1L << 0, key, map);
 	mlx_hook(map->win.win, 17, 1L << 17, x_close, map);

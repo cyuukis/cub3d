@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 17:44:58 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 17:47:23 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/27 20:33:36 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ static void	new_parser(t_all *len, char *line)
 		ft_parses(line, len);
 		if (len->flag == 1)
 			break ;
-		free(len->str_first);
 	}
 	if (len->flag == 0)
 		exit_error();

@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 23:54:34 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/27 20:30:31 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ typedef struct s_plr
 
 typedef struct s_colors
 {
-	int			fbits_one;
-	int			fbits_two;
-	int			fbits_three;
+	int			fo;
+	int			fb;
+	int			ft;
 	int			fbits_color;
 	int			co;
 	int			cb;
@@ -171,5 +171,7 @@ void	ft_colorf(t_all *all);
 void	ft_colorc(t_all *all);
 void	ft_param(t_all *len);
 void	new_bmp(t_all *all);
+void	parser_exitfc(char *str);
+void	ft_parses_utech(t_all *len, char *map);
 
 #endif

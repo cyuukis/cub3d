@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:14:05 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 18:14:49 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/27 20:31:44 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	make_map3(t_all *len)
 
 	i = -1;
 	j = -1;
-	len->obj = (t_map *)malloc(sizeof(t_map) * len->plr.place_two);
+	len->obj = malloc(100 * len->plr.place_two);
 	if (len->obj == NULL)
 		exit_error();
 	while (++i < len->y)
