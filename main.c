@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 17:44:58 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/28 17:28:41 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 18:13:27 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	new_parser(t_all *len, char *line)
 {
 	while (get_next_line(len->fd, &line))
 	{
-		if(*line != '\0')
+		if (*line != '\0')
 		{
 			len->str_first = line;
 			ft_parses(line, len);
@@ -72,7 +72,6 @@ int	main(int argc, char **argv)
 			max = 0;
 			head = NULL;
 			line = prs(&len, argv[1], line);
-			printf("|%s|\n", line);
 			if (ft_strlen(len.str_first) > max)
 				max = ft_strlen(len.str_first) + 1;
 			maping(&len, head, max, line);

@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/28 17:30:42 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 18:13:40 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,6 @@ typedef struct s_all
 	int			count;
 }				t_all;
 
-// int		main(int argc, char **argv);
 void	maping(t_all *len, t_list *head, int max, char *line);
 void	exit_error(void);
 void	make_map_rectl(t_all *len, int i, int j);

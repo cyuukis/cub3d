@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/30 18:01:30 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/28 15:46:11 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 17:56:08 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-typedef	struct	s_list
+typedef struct s_list
 {
 	void				*content;
 	struct s_list		*next;
