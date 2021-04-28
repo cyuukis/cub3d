@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:53:13 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/27 20:24:39 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 16:33:39 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	ft_parser_ea(t_all *len, char *map)
 {
+	if(len->len_ea == 1)
+		exit_error();
 	len->len_ea = 1;
 	len->sum = len->sum + len->len_ea;
 	len->textur_ea = ft_split(map + 2, ' ');
@@ -29,6 +31,8 @@ void	ft_parser_ea(t_all *len, char *map)
 
 void	ft_parser_s(t_all *len, char *map)
 {
+	if(len->len_s == 1)
+		exit_error();
 	len->len_s = 1;
 	len->sum = len->sum + len->len_s;
 	len->textur_s = ft_split(map + 1, ' ');
@@ -44,6 +48,8 @@ void	ft_parser_s(t_all *len, char *map)
 
 void	ft_parser_f(t_all *len, char *map, char *str)
 {
+	if(len->len_f == 1)
+		exit_error();
 	len->len_f = 1;
 	len->sum = len->sum + len->len_f;
 	map++;
@@ -71,6 +77,8 @@ void	ft_parser_f(t_all *len, char *map, char *str)
 
 void	ft_parser_c(t_all *len, char *map, char *str)
 {
+	if(len->len_c == 1)
+		exit_error();
 	len->len_c = 1;
 	len->sum = len->sum + len->len_f;
 	map++;

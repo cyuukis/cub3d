@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:45:25 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/28 15:20:12 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 16:32:56 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	ft_parser_r(t_all *len, char *map)
 
 void	ft_parser_no(t_all *len, char *map)
 {
+	if(len->len_no == 1)
+		exit_error();
 	len->len_no = 1;
 	len->sum = len->sum + len->len_no;
 	len->textur_no = ft_split(map + 2, ' ');
@@ -72,6 +74,8 @@ void	ft_parser_so(t_all *len, char *map)
 
 void	ft_parser_we(t_all *len, char *map)
 {
+	if(len->len_we == 1)
+		exit_error();
 	len->len_we = 1;
 	len->sum = len->sum + len->len_we;
 	len->textur_we = ft_split(map + 2, ' ');

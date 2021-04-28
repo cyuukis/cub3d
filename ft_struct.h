@@ -6,19 +6,18 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/28 14:20:20 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 17:30:42 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_STRUCT_H
 # define FT_STRUCT_H
 # include "mlx.h"
-# include <stdlib.h>
+# include "libft.h"
 # include "get_next_line.h"
+# include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
-# include "ft_struct.h"
-# include "../libft/libft.h"
 # include <math.h>
 # include <stdio.h>
 # define OBJ " 102WESN"
@@ -137,7 +136,7 @@ typedef struct s_all
 	int			count;
 }				t_all;
 
-int		main(int argc, char **argv);
+// int		main(int argc, char **argv);
 void	maping(t_all *len, t_list *head, int max, char *line);
 void	exit_error(void);
 void	make_map_rectl(t_all *len, int i, int j);

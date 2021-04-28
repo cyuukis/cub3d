@@ -1,5 +1,8 @@
 {
 	"files.associations": {
-		"libft.h": "c"
+		"libft.h": "c",
+		"ft_struct.h": "c",
+		"get_next_line.h": "c",
+		"mlx.h": "c"
 	}
 }
