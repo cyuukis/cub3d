@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:55:15 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/27 20:59:14 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 14:20:20 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "ft_struct.h"
 # include "../libft/libft.h"
 # include <math.h>
+# include <stdio.h>
 # define OBJ " 102WESN"
 # define OBJJ "02WESN"
 

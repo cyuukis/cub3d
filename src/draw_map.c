@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:19:30 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/27 20:32:54 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 15:47:26 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	ft_parses_utech(t_all *len, char *map)
 
 int	x_close(int keycode, t_all *all)
 {
+	keycode = 0;
 	ft_memset(&all, 0, sizeof(all));
 	exit(1);
 }
@@ -56,7 +57,10 @@ void	draw_map(t_all *map, int argc, char *argv)
 	if (argc == 3)
 	{
 		if (ft_strncmp(argv, "--save", 7) == 0)
+		{
 			new_bmp(map);
+			exit(1);
+		}
 		else
 		{
 			exit_error();

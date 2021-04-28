@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 17:55:41 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/27 20:28:26 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 15:45:15 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ static char	**make_map(t_list **head, int size, t_all *len, int max)
 {
 	int		i;
 	int		j;
-	char	sym;
 	char	*line;
 	t_list	*tmp;
 
@@ -79,6 +78,7 @@ static char	**make_map(t_list **head, int size, t_all *len, int max)
 		len->y = i;
 	}
 	make_map2(len);
+	ft_lstclear(head, free);
 	len->plr.c = malloc(sizeof(float) * len->width);
 	if (len->plr.c == NULL)
 		exit_error();
@@ -93,6 +93,7 @@ static void	ft_col(int max, t_all *len, t_list *head, char *line)
 			max = ft_strlen(line);
 		ft_lstadd_back(&head, ft_lstnew(line));
 	}
+	free(line);
 }
 
 void	maping(t_all *len, t_list *head, int max, char *line)

@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 16:32:53 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/27 20:22:47 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 13:44:21 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@
 
 # define BUFFER_SIZE 1024
 int			get_next_line(int fd, char **line);
-static int	add_check2(char **choto, char *temp);
+int	add_check2(char **choto, char *temp);
 char		*ft_strchr(const char *str, int ch);
 char		*ft_strjoin(char const *s1, char const *s2);
 char		*ft_strdup(const char *str);
+int	add_check3(char **choto, char *temp);
 #endif

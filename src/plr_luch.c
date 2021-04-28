@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:29:54 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 18:58:29 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 15:43:57 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	wall_3d(t_all *all, int i)
 	int		y;
 	float	a;
 
+	a = 0;
 	y = 0;
 	if (all->plr.c[i] > 0)
 		a = all->height / (all->plr.c[i] * \
@@ -82,7 +83,6 @@ void	col_luch(t_all *all, int i)
 void	plr_luch(t_all *all)
 {
 	int		i;
-	float	a;
 
 	all->fov = 0.5F;
 	i = 0;

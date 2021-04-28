@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:14:05 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/27 20:31:44 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/27 21:45:52 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 static void	ft_parses_map2(int y, int x, t_all *all)
 {
 	static int	count;
-	float		dx;
-	float		dy;
 
 	all->obj[count].x = x + 0.5;
 	all->obj[count].y = y + 0.5;

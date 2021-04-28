@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 19:05:11 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/27 20:34:09 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/27 21:47:25 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	drawbmp2(t_drwbmp *bmp, t_all *all)
 	drawbmp3(bmp, all);
 }
 
-void	drawbmp(t_all *all, int width, int height, t_drwbmp *bmp)
+void	drawbmp(t_all *all, t_drwbmp *bmp)
 {
 	int	sum;
 
@@ -109,6 +109,6 @@ void	new_bmp(t_all *all)
 	plr_luch(all);
 	bmp.open = open("screen_cub.bmp", O_CREAT | O_WRONLY | O_TRUNC, \
 		S_IREAD | S_IWRITE);
-	drawbmp(all, all->width, all->height, &bmp);
+	drawbmp(all, &bmp);
 	close(bmp.open);
 }

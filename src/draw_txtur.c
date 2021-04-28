@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:36:24 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 18:40:16 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/27 21:45:18 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ void	draw_sprite1(t_all *all, float x, float y, float dist)
 	float	i;
 	float	j;
 
+	i = 0;
+	j = 0;
 	teta = atan2(y - all->plr.y, x - all->plr.x);
 	while (teta - all->plr.direction > M_PI)
 		teta -= 2 * M_PI;

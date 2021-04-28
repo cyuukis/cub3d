@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/30 18:01:30 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 19:34:38 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 15:46:11 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,6 @@ char			*ft_strtrim(char const *s1, char const *set);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
 int				ft_tolower(int c);
 int				ft_toupper(int ch);
+void			ft_lstclear(t_list **lst, void (*del)(void *));
 
 #endif

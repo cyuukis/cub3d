@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 20:13:02 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/27 20:22:00 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 13:48:30 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	add_check_cache(char **cache, char **line)
 		return (0);
 }
 
-static int	add_check(char *buffer, char **line, char **cache, int flag)
+static int	add_check(char *buffer, char **line, char **cache)
 {
 	char	*point;
 	char	*temp;
@@ -59,13 +59,11 @@ static int	add_check(char *buffer, char **line, char **cache, int flag)
 		}
 		temp = *line;
 		*line = ft_strjoin(*line, buffer);
-		if (!(*line))
-			return (-1);
-		return (1);
+		return (add_check3(line, temp));
 	}
 	temp = *line;
 	*line = ft_strjoin(*line, buffer);
-	return (flag);
+	return (add_check2(line, temp));
 }
 
 static int	dopfun1(int add, char *cache, char **line)
@@ -99,8 +97,8 @@ int	get_next_line(int fd, char **line)
 	char			buffer[BUFFER_SIZE + 1];
 	int				add;
 	static char		*cache;
-	int				flag;
 
+	add = 0;
 	*line = (char *)malloc(1);
 	if (fd < 0 || BUFFER_SIZE < 1 || !line || !(*line))
 		return (-1);
@@ -116,7 +114,7 @@ int	get_next_line(int fd, char **line)
 	while (add > 0)
 	{
 		buffer[add] = '\0';
-		add = add_check(buffer, line, &cache, flag);
+		add = add_check(buffer, line, &cache);
 		if (add == 1 || add == -1)
 			break ;
 	}
