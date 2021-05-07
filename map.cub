@@ -1,11 +1,11 @@
-R 400 500
+R 900 900
 NO ./images/sever_gora.xpm
 SO ./images/gori_sochi.xpm
 WE ./images/zapad.xpm
 EA ./images/vostok.xpm
 S ./images/sprite2.xpm
-F 255, 43, 54
-C 255, 255, 0
+F 0, 255, 255
+C 255, 0, 0
 
         1111111111111111111111111
         1000000000110000000000001

@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:53:13 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/28 18:16:05 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 21:27:25 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,35 +53,6 @@ void	ft_parser_f(t_all *len, char *map, char *str)
 	len->len_f = 1;
 	len->sum = len->sum + len->len_f;
 	map++;
-	len->colors.fo = ft_atoi(map);
-	str = ft_strchr(map, ',');
-	parser_exitfc(str);
-	map = str;
-	map++;
-	len->colors.fb = ft_atoi(map);
-	str = ft_strchr(map, ',');
-	parser_exitfc(str);
-	map = str;
-	map++;
-	len->colors.ft = ft_atoi(map);
-	str = "";
-	str = ft_strchr(map, ',');
-	if (str != '\0')
-		exit_error();
-	if (len->colors.fo > 255 || len->colors.fb > 255 || len->colors.ft > 255)
-		exit_error();
-	if (len->colors.fo <= -1 || len->colors.fb <= -1 || len->colors.ft <= -1)
-		exit_error();
-	ft_colorf(len);
-}
-
-void	ft_parser_c(t_all *len, char *map, char *str)
-{
-	if (len->len_c == 1)
-		exit_error();
-	len->len_c = 1;
-	len->sum = len->sum + len->len_f;
-	map++;
 	len->colors.co = ft_atoi(map);
 	str = ft_strchr(map, ',');
 	parser_exitfc(str);
@@ -102,6 +73,35 @@ void	ft_parser_c(t_all *len, char *map, char *str)
 	if (len->colors.co <= -1 || len->colors.cb <= -1 || len->colors.ct <= -1)
 		exit_error();
 	ft_colorc(len);
+}
+
+void	ft_parser_c(t_all *len, char *map, char *str)
+{
+	if (len->len_c == 1)
+		exit_error();
+	len->len_c = 1;
+	len->sum = len->sum + len->len_f;
+	map++;
+	len->colors.fo = ft_atoi(map);
+	str = ft_strchr(map, ',');
+	parser_exitfc(str);
+	map = str;
+	map++;
+	len->colors.fb = ft_atoi(map);
+	str = ft_strchr(map, ',');
+	parser_exitfc(str);
+	map = str;
+	map++;
+	len->colors.ft = ft_atoi(map);
+	str = "";
+	str = ft_strchr(map, ',');
+	if (str != '\0')
+		exit_error();
+	if (len->colors.fo > 255 || len->colors.fb > 255 || len->colors.ft > 255)
+		exit_error();
+	if (len->colors.fo <= -1 || len->colors.fb <= -1 || len->colors.ft <= -1)
+		exit_error();
+	ft_colorf(len);
 }
 
 void	ft_parser_map(t_all *len, char *map)

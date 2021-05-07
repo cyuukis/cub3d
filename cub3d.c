@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:33:43 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/28 17:56:55 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 21:26:02 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_colorf(t_all *all)
 	int	g;
 	int	b;
 
-	r = all->colors.fo << 1;
+	r = all->colors.fo << 16;
 	g = all->colors.fb << 8;
 	b = all->colors.ft << 0;
 	all->colors.fbits_color = r | g | b;
@@ -30,7 +30,7 @@ void	ft_colorc(t_all *all)
 	int	g;
 	int	b;
 
-	r = all->colors.co << 1;
+	r = all->colors.co << 16;
 	g = all->colors.cb << 8;
 	b = all->colors.ct << 0;
 	all->colors.cbits_color = r | g | b;

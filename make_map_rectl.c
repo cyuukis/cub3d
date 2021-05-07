@@ -6,7 +6,7 @@
 /*   By: cyuuki <cyuuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:10:34 by cyuuki            #+#    #+#             */
-/*   Updated: 2021/04/26 18:11:38 by cyuuki           ###   ########.fr       */
+/*   Updated: 2021/04/28 21:33:56 by cyuuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,10 @@ void	make_map_rectl(t_all *len, int i, int j)
 	&& (len->map[i + 1][j - 1] != ' ') \
 	&& (len->map[i + 1][j + 1] != ' '))
 		ft_parses_map(i, j, len->map[i][j], len);
-	else
+	else if ((len->map[i - 1][j] != '\0') && (len->map[i + 1][j] != '\0') \
+	&& (len->map[i][j + 1] != '\0') && (len->map[i][j - 1] != '\0') \
+	&& (len->map[i - 1][j - 1] != '\0') && (len->map[i - 1][j + 1] != '\0') \
+	&& (len->map[i + 1][j - 1] != '\0') \
+	&& (len->map[i + 1][j + 1] != '\0'))
 		exit_error();
 }
